@@ -7,7 +7,7 @@ class Example extends React.Component {
     return (
       <Form>
         <Field name="email" component="input" />
-        <Field name="password" component="input" />
+        <Field name="password" component="input" type="password" />
       </Form>
     )
   }

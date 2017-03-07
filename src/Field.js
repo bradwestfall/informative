@@ -25,8 +25,9 @@ class Field extends React.Component {
     if (typeof callback === 'function') {
       return callback(props, state, formState)
     } else if (this.props.component) {
+      const type = this.props.type || 'text'
       switch(this.props.component) {
-        case 'input': return <input type="text" name={name} {...props} />
+        case 'input': return <input type={type} name={name} {...props} />
         case 'textarea': return <textarea name={name} {...props} />
       }
     } else {

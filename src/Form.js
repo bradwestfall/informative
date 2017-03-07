@@ -43,14 +43,15 @@ class Form extends React.Component {
 
   registerField(name) {
     this.setState(prevState => {
-      let newState = { fields: Object.assign(clone(prevState.fields), {[name]: initialFieldState}) }
+      let newState = clone(prevState)
+      newState.fields[name] = initialFieldState
 
-      // if there was an initial value
-      const initialValue = this.props.initialValues && this.props.initialValues[name]
-      if (initialValue) {
-        newState = this.validate(name, initialValue, newState)
-        newState.fields[name].value = initialValue
-      }
+      // Get initial value if supplied
+      const initialValue = (this.props.initialValues && this.props.initialValues[name]) || ''
+
+      // Validate field
+      newState = this.validate(name, initialValue, newState)
+      newState.fields[name].value = initialValue
 
       return newState
     })
@@ -82,13 +83,13 @@ class Form extends React.Component {
     const formValues = Object.assign({}, existingState.values, {[name]: value})
 
     // Determine Errors for entire form based on new change
-    const errors = clone(this.props.validate(formValues))
+    const errors = clone(this.props.validate(formValues) || {})
     const validForm = !Object.keys(errors).length
 
     // Validation returns this new state
     const newState = { validForm, errors, values: formValues, fields: clone(existingState.fields) }
 
-    // Iterate all existing fields and change their error message and `validField`
+    // Iterate all existing fields and change their `error` message and `validField`
     for (let name in newState.fields) {
       newState.fields[name].error = errors[name] || ''
       newState.fields[name].validField = !newState.fields[name].error
@@ -106,7 +107,6 @@ class Form extends React.Component {
     if (!validForm || this.props.onSubmit) e.preventDefault()
 
     this.setState({ submitting: true, submitFailed: validForm, hasSubmitted: true }, () => {
-
       if (!validForm) {
         this.submitFailed()
         return false
@@ -116,17 +116,17 @@ class Form extends React.Component {
           .then(() => this.setState({ submitting: false }))
           .catch(this.submitFailed)
       }
-
     })
   }
 
   render() {
-    return (
-      <form
-        onSubmit={this.onSubmit}>
-        {this.props.children}
-      </form>
-    )
+    const props = {
+      onSubmit: this.onSubmit
+    }
+
+    return typeof this.props.children === 'function'
+      ? this.props.children(props, this.state)
+      : <form {...props}>{this.props.children}</form>
   }
 }
 
