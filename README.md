@@ -219,6 +219,8 @@ class LoginForm extends React.Component {
 }
 ```
 
+Note that your submit handler callback will not be called if the form is invalid based on your validation rules.
+
 `onSubmit` is expected to return a promise. In this case we're using the XHR promise library [axios](https://github.com/mzabriskie/axios), but you can do anything you want with the values, as long as a promise is returned.
 
 When a rejected promise is returned to the API, the `formState.submitFailed` flag is turned to `false`. To see more about how state is handled in the form, see `formState` below.
