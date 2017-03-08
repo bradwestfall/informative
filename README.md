@@ -243,23 +243,27 @@ Sometimes it's nice to know what the `formState` is at the top-level of the API.
 The `Form` component allows us to pass a callback function as its first child:
 
 ```jsx
-class LoginForm extends React.Component (
+class LoginForm extends React.Component {
 
   validate() { return {} }
   onSubmit() { return Promise.resolve() }
 
-  <Form validate={this.validate} onSubmit={this.onSubmit}>
-    {(props, formState) => (
+  render() {
+    return (
+      <Form validate={this.validate} onSubmit={this.onSubmit}>
+        {(props, formState) => (
 
-      <form {...props}>
-        <FieldEmail />
-        <FieldPassword />
-        <button type="submit" disabled={!formState.validForm || formState.submitting}>Submit</button>
-      </form>
+          <form {...props}>
+            <FieldEmail />
+            <FieldPassword />
+            <button type="submit" disabled={!formState.validForm || formState.submitting}>Submit</button>
+          </form>
 
-    )}
-  </Form>
-)
+        )}
+      </Form>
+    )
+  }
+}
 ```
 
 The only catch is that we now need to return a `<form>` element since using the API this way won't provide it for us. The callback though does provide `props` which we can give the `form` for it's callbacks that were provided to `Form`. The callback also provides `formState` which is the primary reason to use this pattern.
