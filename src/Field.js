@@ -11,6 +11,9 @@ class Field extends React.Component {
     const formState = this.context.getFormState() || {}
     const state = formState.fields[name]
 
+    // Bail if name not provided
+    if (!name) throw new Error('the `name` prop must be provided to `<Field>`')
+
     // Don't render if state hasn't been setup
     if (!state) return null
 
@@ -41,6 +44,10 @@ Field.contextTypes = {
   getFormState: React.PropTypes.func,
   setFieldState: React.PropTypes.func,
   component: React.PropTypes.string
+}
+
+Field.propTypes = {
+  name: React.PropTypes.string.isRequired
 }
 
 export default Field

@@ -3,6 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <title>Example Form</title>
+
+  <style>
+
+    body {
+      font-family: arial;
+    }
+
+    form > * + * {
+      margin-top: 1em;
+    }
+
+    .field-wrap {
+      background-color: #eee;
+      max-width: 500px;
+      padding: 1em;
+    }
+
+    .field-wrap label {
+      font-size: 0.6em;
+      font-weight: 700;
+    }
+
+    .field-wrap .error {
+      color: red;
+    }
+
+  </style>
 </head>
 <body>
   <div id="root"></div>
