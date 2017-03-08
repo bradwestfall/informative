@@ -41,7 +41,7 @@ To achieve this without repeating the same HTML, create a custom version of `Fie
 
 ```jsx
 const FieldWrap = props => {
-  const { label, ...rest } = props
+  const { label, type, ...rest } = props
 
   return (
     <Field {...rest}>
@@ -49,7 +49,7 @@ const FieldWrap = props => {
         <div className="field-wrap">
           <label>{label}</label>
           <div className="input">
-            <input {...inputProps} />
+            <input {...inputProps} type={type} />
           </div>
         </div>
       )}
@@ -68,3 +68,93 @@ const LoginForm = props => (
   </Form>
 )
 ```
+
+Notice that the callback we pass to `Field` will get three values `inputProps`, `fieldState`, and `formState`
+
+`inputProps` are important because you need to spread those on the input field. This object contains event handlers and other important information for our input field. Then as you can imagine, `fieldState` contains various details about the field and `formState` has details about the overall form. State is documented later in this file.
+
+Also notice that through the `...rest` object, we are still passing the required `name` to `Field`
+
+
+## Field Abstractions
+
+With our new `FieldWrap` component, we can now make easy field abstractions for common fields:
+
+```jsx
+const FieldEmail = props => <FieldWrap label="Email" name="email" {...props} />
+const FieldFirstName = props => <FieldWrap label="FirstName" name="firstName" {...props} />
+const FieldLastName = props => <FieldWrap label="LastName" name="lastName" {...props} />
+```
+
+To be used like this:
+
+```jsx
+const SignupForm = props => (
+  <Form>
+    <FieldEmail />
+    <FieldEmail label="repeatEmail" name="repeatEmail" />
+    <FieldFirstName />
+    <FieldLastName />
+  </Form>
+)
+```
+
+## Validation and Submit Handling
+
+The `Form` component can also take props for `validate` and `onSubmit`.
+
+The `validate` callback gets called with every value change of any field. It receives the form's values as an argument and is expected to return an object of errors with the name of the field as the respective property of the return object:
+
+```jsx
+class LoginForm extends React.Component {
+  validate(values) {
+    const errors = {}
+    if (!/^[\w\d\.]+@[\w\d]+\.[\w]{2,9}$/.test(values.email)) errors.email = "Invalid Email"
+    if (!/^[\w\d]{6,20}$/.test(values.password)) errors.password = "Invalid Password"
+    return errors
+  }
+
+  render() {
+    return (
+      <Form validate={this.validate}>
+        <FieldEmail />
+        <FieldPassword />
+      </Form>
+    )
+  }
+}
+```
+
+There are much more elegant ways of writing validation such that you wouldn't have to re-write rules for every form, but this shows the basic point that if the `email` and `password` fields are not valid, then we will return:
+
+```json
+{ "email": "Invalid Email", "password": "Invalid Password" }
+```
+
+The `onSubmit` prop works similarly to `validate`:
+
+```jsx
+class LoginForm extends React.Component {
+  validate(values) {
+    const errors = {}
+    if (!/^[\w\d\.]+@[\w\d]+\.[\w]{2,9}$/.test(values.email)) errors.email = "Invalid Email"
+    if (!/^[\w\d]{6,20}$/.test(values.password)) errors.password = "Invalid Password"
+    return errors
+  }
+
+  onSubmit(values, formState) {
+    return axios.post('somepath/', values)
+  }
+
+  render() {
+    return (
+      <Form validate={this.validate} onSubmit={this.onSubmit}>
+        <FieldEmail />
+        <FieldPassword />
+      </Form>
+    )
+  }
+}
+```
+
+However, `onSubmit` is expected to return a promise. In this case we're using the XHR promise library [axios](https://github.com/mzabriskie/axios), but you can do anything you want with the values, as long as a promise is returned.
