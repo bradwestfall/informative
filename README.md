@@ -138,8 +138,8 @@ With our new `FieldWrap` component, we can now make easy field abstractions for 
 
 ```jsx
 const FieldEmail = props => <FieldWrap label="Email" name="email" component={Input} {...props} />
-const FieldFirstName = props => <FieldWrap label="FirstName" name="firstName" component={Input} {...props} />
-const FieldLastName = props => <FieldWrap label="LastName" name="lastName" component={Input} {...props} />
+const FieldFirstName = props => <FieldWrap label="First Name" name="firstName" component={Input} {...props} />
+const FieldLastName = props => <FieldWrap label="Last Name" name="lastName" component={Input} {...props} />
 ```
 
 To be used like this:
