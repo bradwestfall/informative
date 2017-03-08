@@ -122,7 +122,7 @@ const FieldWrap = props => {
 const LoginForm = props => (
   <Form>
     <FieldWrap label="Email" name="email" component={Input} />
-    <FieldWrap label="Password" name="password" type={Input} />
+    <FieldWrap label="Password" name="password" type="password" component={Input} />
   </Form>
 )
 ```
