@@ -7,19 +7,17 @@ const FieldWrap = props => {
 
   return (
     <Field {...rest}>
-      {(inputProps, fieldState, formState) => {
-        return (
-          <div className="field-wrap">
-            <label>{label}</label>
-            <div className="input">
-              <input {...inputProps} />
-            </div>
-            <div className="error">
-              {fieldState.error}
-            </div>
+      {(inputProps, fieldState, formState) => (
+        <div className="field-wrap">
+          <label>{label}</label>
+          <div className="input">
+            <input {...inputProps} />
           </div>
-        )
-      }}
+          <div className="error">
+            {fieldState.error}
+          </div>
+        </div>
+      )}
     </Field>
   )
 }
@@ -33,11 +31,16 @@ class Example extends React.Component {
     return errors
   }
 
+  onSubmit(values) {
+    console.log('Submit Values', values)
+    return Promise.resolve()
+  }
+
   render() {
     const initialValues = { email: 'example@example.com', password: 'abc123' }
 
     return (
-      <Form validate={this.validate} initialValues={initialValues}>
+      <Form validate={this.validate} onSubmit={this.onSubmit} initialValues={initialValues}>
         <FieldWrap label="Email" name="email"  />
         <FieldWrap label="Password" name="password" type="password" />
         <button type="submit">Submit</button>
