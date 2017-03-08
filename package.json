@@ -16,7 +16,8 @@
     "clean:commonjs": "rimraf dist/commonjs",
     "example": "cross-env EXAMPLE=$form node examples/server.js",
     "example:simple": "form=simple npm run example",
-    "example:validation": "form=validation npm run example"
+    "example:simple-validation": "form=simple-validation npm run example",
+    "example:simple-submit-handle": "form=simple-submit-handle npm run example"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",

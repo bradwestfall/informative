@@ -51,7 +51,9 @@ class Form extends React.Component {
 
       // Validate field
       newState = this.validate(name, initialValue, newState)
+
       newState.fields[name].value = initialValue
+      newState.values[name] = initialValue
 
       return newState
     })
@@ -73,6 +75,10 @@ class Form extends React.Component {
     // Apply new state
     newState.fields[name] = Object.assign(newState.fields[name], state)
 
+    if (state.value) {
+      newState.values[name] = state.value
+    }
+
     this.setState(newState)
   }
 
@@ -87,7 +93,7 @@ class Form extends React.Component {
     const validForm = !Object.keys(errors).length
 
     // Validation returns this new state
-    const newState = { validForm, errors, values: formValues, fields: clone(existingState.fields) }
+    const newState = { errors, validForm, values: formValues, fields: clone(existingState.fields) }
 
     // Iterate all existing fields and change their `error` message and `validField`
     for (let name in newState.fields) {

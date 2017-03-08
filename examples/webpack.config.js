@@ -4,6 +4,7 @@ var webpack = require('webpack')
 var examplePath = process.env.EXAMPLE
 
 module.exports = {
+  devtool: 'inline-source-map',
   entry: [
     'webpack-hot-middleware/client',
     path.join(__dirname, examplePath, 'index.js')
