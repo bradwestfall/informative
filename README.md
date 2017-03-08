@@ -158,3 +158,13 @@ class LoginForm extends React.Component {
 ```
 
 However, `onSubmit` is expected to return a promise. In this case we're using the XHR promise library [axios](https://github.com/mzabriskie/axios), but you can do anything you want with the values, as long as a promise is returned.
+
+
+## `fieldState`
+
+_todo_
+
+
+## `formState`
+
+_todo_
