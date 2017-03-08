@@ -43,19 +43,18 @@ class Form extends React.Component {
 
   registerField(name) {
     this.setState(prevState => {
-      let newState = clone(prevState)
-      newState.fields[name] = initialFieldState
 
       // Get initial value if supplied
       const initialValue = (this.props.initialValues && this.props.initialValues[name]) || ''
 
-      // Validate field
-      newState = this.validate(name, initialValue, newState)
-
+      const newState = clone(prevState)
+      newState.fields[name] = clone(initialFieldState)
       newState.fields[name].value = initialValue
       newState.values[name] = initialValue
 
-      return newState
+      // Validate field which returns new state
+      return this.validate(name, newState)
+
     })
 
   }
@@ -65,39 +64,30 @@ class Form extends React.Component {
   }
 
   setFieldState(name, state) {
-    let newState = {}
-
-    // If the state change included a value change
-    newState = state.value
-      ? this.validate(name, state.value, this.state)  // Create state from validation
-      : { fields: clone(this.state.fields) }          // Create state from existing
+    let newState = clone(this.state)
 
     // Apply new state
     newState.fields[name] = Object.assign(newState.fields[name], state)
 
+    // Set form values and validate
     if (state.value) {
       newState.values[name] = state.value
+      newState = this.validate(name, newState)
     }
 
     this.setState(newState)
   }
 
-  validate(name, value, existingState) {
-    if (!this.props.validate) return existingState
+  validate(name, state) {
+    if (!this.props.validate) return state
 
-    // Make form values with the new value applied
-    const formValues = Object.assign({}, existingState.values, {[name]: value})
-
-    // Determine Errors for entire form based on new change
-    const errors = clone(this.props.validate(formValues) || {})
-    const validForm = !Object.keys(errors).length
-
-    // Validation returns this new state
-    const newState = { errors, validForm, values: formValues, fields: clone(existingState.fields) }
+    const newState = clone(state)
+    newState.errors = clone(this.props.validate(state.values) || {})
+    newState.validForm = !Object.keys(newState.errors).length
 
     // Iterate all existing fields and change their `error` message and `validField`
     for (let name in newState.fields) {
-      newState.fields[name].error = errors[name] || ''
+      newState.fields[name].error = newState.errors[name] || ''
       newState.fields[name].validField = !newState.fields[name].error
     }
 

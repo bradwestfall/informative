@@ -11,22 +11,20 @@ class Example extends React.Component {
     return errors
   }
 
-  onSubmit(values) {
-    console.log(values)
-  }
-
   render() {
     return (
-      <Form validate={this.validate} onSubmit={this.onSubmit}>
-        {(props, formState) => (
-          <form {...props}>
-            <Field name="email" component="input" /> {formState.errors.email}
-            <br />
-            <Field name="password" component="input" type="password" /> {formState.errors.password}
-            <br />
-            <button type="submit">Submit</button>
-          </form>
-        )}
+      <Form validate={this.validate}>
+        {(props, formState) => {
+          return (
+            <form {...props}>
+              <Field name="email" component="input" /> {formState.errors.email}
+              <br />
+              <Field name="password" component="input" type="password" /> {formState.errors.password}
+              <br />
+              <button type="submit">Submit</button>
+            </form>
+          )
+        }}
       </Form>
     )
   }
