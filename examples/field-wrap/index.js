@@ -2,16 +2,21 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Form, Field } from 'src'
 
+const Input = props => {
+  const { name, type, ...rest} = props
+  return <input type={type || 'text'} id={`field-` + name} name={name} {...rest} />
+}
+
 const FieldWrap = props => {
-  const { label, type, ...rest } = props
+  const { label, type, name, component: Component, ...rest } = props
 
   return (
     <Field {...rest}>
       {(inputProps, fieldState, formState) => (
         <div className="field-wrap">
-          <label>{label}</label>
+          <label htmlFor={`field-` + name}>{label}</label>
           <div className="input">
-            <input {...inputProps} type={type} />
+            <Component {...inputProps} name={name} type={type} />
           </div>
           <div className="error">
             {fieldState.error}
@@ -41,8 +46,8 @@ class Example extends React.Component {
 
     return (
       <Form validate={this.validate} onSubmit={this.onSubmit} initialValues={initialValues}>
-        <FieldWrap label="Email" name="email"  />
-        <FieldWrap label="Password" name="password" type="password" />
+        <FieldWrap label="Email" name="email" component={Input} />
+        <FieldWrap label="Password" name="password" type="password" component={Input} />
         <button type="submit">Submit</button>
       </Form>
     )
