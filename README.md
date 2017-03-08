@@ -158,11 +158,9 @@ const SignupForm = props => (
 We can even override defaults by still passing in props for `label` and `name`.
 
 
-## Validation and Submit Handling
+## Validation
 
-The `Form` component can also take props for `validate` and `onSubmit`.
-
-The `validate` callback gets called with every value change of any field. It receives the form's values as an argument and is expected to return an object of errors with the name of the field as the respective property of the return object:
+To provide custom validation, pass a `validate` callback into `Form`. The `validate` callback gets called with every value change of any field. It receives the form's values as an argument and is expected to return an object of errors with the name of the field as the respective property of the return object:
 
 ```jsx
 class LoginForm extends React.Component {
@@ -190,7 +188,11 @@ There are much more elegant ways of writing validation such that you wouldn't ha
 { "email": "Invalid Email", "password": "Invalid Password" }
 ```
 
-The `onSubmit` prop works similarly to `validate`:
+See `fieldState` below to see how we can customize the error response to our liking.
+
+## Submit Handling
+
+To provide custom submit handling, pass an `onSubmit` callback into `Form`. The `onSubmit` callback gets called when the form is submitted and passes the form's values and `formState` into the callback.
 
 ```jsx
 class LoginForm extends React.Component {
@@ -210,13 +212,16 @@ class LoginForm extends React.Component {
       <Form validate={this.validate} onSubmit={this.onSubmit}>
         <FieldEmail />
         <FieldPassword />
+        <button type="submit">Submit</button>
       </Form>
     )
   }
 }
 ```
 
-However, `onSubmit` is expected to return a promise. In this case we're using the XHR promise library [axios](https://github.com/mzabriskie/axios), but you can do anything you want with the values, as long as a promise is returned.
+`onSubmit` is expected to return a promise. In this case we're using the XHR promise library [axios](https://github.com/mzabriskie/axios), but you can do anything you want with the values, as long as a promise is returned.
+
+When a rejected promise is returned to the API, the `formState.submitFailed` flag is turned to `false`. To see more about how state is handled in the form, see `formState` below.
 
 
 ## Initial Values
@@ -227,6 +232,31 @@ The `Form` component can also take a prop for `initialValues`. This is a simple 
 const initialValues = { email: 'example@example.com', password: 'abc123' }
 <Form initialValues={initialValues}></Form>
 ```
+
+
+## Form State Callback
+
+Sometimes it's nice to know what the `formState` is at the top-level of the API. For instance, what if we want to disable the submit button based on whether the form is valid?
+
+The `Form` component allows us to pass a callback function as its first child:
+
+```jsx
+class LoginForm extends React.Component (
+  <Form validate={this.validate} onSubmit={this.onSubmit}>
+    {(props, formState) => (
+
+      <form {...props}>
+        <FieldEmail />
+        <FieldPassword />
+        <button type="submit" disabled={!formState.validForm || formState.submitting}>Submit</button>
+      </form>
+
+    )}
+  </Form>
+)
+```
+
+The only catch is that we now need to return a `<form>` element since using the API this way won't provide it for us. The callback though does provide `props` which we can give the `form` for it's callbacks that were provided to `Form`. The callback also provides `formState` which is the primary reason to use this pattern.
 
 
 ## `fieldState`
