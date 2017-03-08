@@ -92,7 +92,7 @@ To be used like this:
 const SignupForm = props => (
   <Form>
     <FieldEmail />
-    <FieldEmail label="repeatEmail" name="repeatEmail" />
+    <FieldEmail label="Repeat Email" name="repeatEmail" />
     <FieldFirstName />
     <FieldLastName />
   </Form>
