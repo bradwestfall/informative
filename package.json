@@ -18,8 +18,7 @@
     "example:simple": "form=simple npm run example",
     "example:simple-validation": "form=simple-validation npm run example",
     "example:simple-submit-handle": "form=simple-submit-handle npm run example",
-    "example:field-wrap": "form=field-wrap npm run example",
-    "example:custom-fields": "form=custom-fields npm run example"
+    "example:field-wrap": "form=field-wrap npm run example"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
