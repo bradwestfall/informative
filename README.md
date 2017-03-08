@@ -236,7 +236,7 @@ const initialValues = { email: 'example@example.com', password: 'abc123' }
 ```
 
 
-## Form State Callback
+## Accessing `formState`
 
 Sometimes it's nice to know what the `formState` is at the top-level of the API. For instance, what if we want to disable the submit button based on whether the form is valid?
 
