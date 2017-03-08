@@ -127,12 +127,12 @@ const LoginForm = props => (
 )
 ```
 
-With `Input` now abstracted away from `FieldWrap`, you can probably imagine making similar components for `Select`, `Textarea` and more.
+With `Input` as a component and now abstracted away from `FieldWrap`, you can probably imagine making similar components for `Select`, `Textarea`, and more.
 
 
 ## Field Abstractions
 
-Further abstraction can be done by making specific types of fields for quick use. For example, imaging having a `<FirstName />` field which abstracts the same thing as `<FieldWrap label="First Name" name="firstName" component={Input} />`
+Further abstraction can be done by making specific types of fields for quick use. For example, imaging having a `<FieldFirstName />` component which provides the same result as `<FieldWrap label="First Name" name="firstName" component={Input} />`.
 
 With our new `FieldWrap` component, we can now make easy field abstractions for common fields:
 
@@ -154,6 +154,9 @@ const SignupForm = props => (
   </Form>
 )
 ```
+
+We can even override defaults by still passing in props for `label` and `name`.
+
 
 ## Validation and Submit Handling
 
