@@ -244,6 +244,10 @@ The `Form` component allows us to pass a callback function as its first child:
 
 ```jsx
 class LoginForm extends React.Component (
+
+  validate() { return {} }
+  onSubmit() { return Promise.resolve() }
+
   <Form validate={this.validate} onSubmit={this.onSubmit}>
     {(props, formState) => (
 
