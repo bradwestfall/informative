@@ -160,6 +160,16 @@ class LoginForm extends React.Component {
 However, `onSubmit` is expected to return a promise. In this case we're using the XHR promise library [axios](https://github.com/mzabriskie/axios), but you can do anything you want with the values, as long as a promise is returned.
 
 
+## Initial Values
+
+The `Form` component can also take a prop for `initialValues`. This is a simple object with keys that match the names of the fields:
+
+```jsx
+const initialValues = { email: 'example@example.com', password: 'abc123' }
+<Form initialValues={initialValues}></Form>
+```
+
+
 ## `fieldState`
 
 _todo_
