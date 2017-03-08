@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { Form, Field } from 'src'
 
 const FieldWrap = props => {
-  const { label, ...rest } = props
+  const { label, type, ...rest } = props
 
   return (
     <Field {...rest}>
@@ -11,7 +11,7 @@ const FieldWrap = props => {
         <div className="field-wrap">
           <label>{label}</label>
           <div className="input">
-            <input {...inputProps} />
+            <input {...inputProps} type={type} />
           </div>
           <div className="error">
             {fieldState.error}
