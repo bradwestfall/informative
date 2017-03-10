@@ -173,8 +173,8 @@ With our new `FieldWrap` component, we can now make easy field abstractions for 
 
 ```jsx
 const FieldEmail = props => <FieldWrap label="Email" name="email" component={Input} {...props} />
-const FieldFirstName = props => <FieldWrap label="FirstName" name="firstName" component={Input} {...props} />
-const FieldLastName = props => <FieldWrap label="LastName" name="lastName" component={Input} {...props} />
+const FieldFirstName = props => <FieldWrap label="First Name" name="firstName" component={Input} {...props} />
+const FieldLastName = props => <FieldWrap label="Last Name" name="lastName" component={Input} {...props} />
 ```
 
 To be used like this:
@@ -254,6 +254,8 @@ class LoginForm extends React.Component {
 }
 ```
 
+Note that your submit handler callback will not be called if the form is invalid based on your validation rules.
+
 `onSubmit` is expected to return a promise. In this case we're using the XHR promise library [axios](https://github.com/mzabriskie/axios), but you can do anything you want with the values, as long as a promise is returned.
 
 When a rejected promise is returned to the API, the `formState.submitFailed` flag is turned to `false`. To see more about how state is handled in the form, see `formState` below.
@@ -269,26 +271,34 @@ const initialValues = { email: 'example@example.com', password: 'abc123' }
 ```
 
 
-## Form State Callback
+## Accessing `formState`
 
 Sometimes it's nice to know what the `formState` is at the top-level of the API. For instance, what if we want to disable the submit button based on whether the form is valid?
 
 The `Form` component allows us to pass a callback function as its first child:
 
 ```jsx
-class LoginForm extends React.Component (
-  <Form validate={this.validate} onSubmit={this.onSubmit}>
-    {(props, formState) => (
+class LoginForm extends React.Component {
 
-      <form {...props}>
-        <FieldEmail />
-        <FieldPassword />
-        <button type="submit" disabled={!formState.validForm || formState.submitting}>Submit</button>
-      </form>
+  validate() { return {} }
+  onSubmit() { return Promise.resolve() }
 
-    )}
-  </Form>
-)
+  render() {
+    return (
+      <Form validate={this.validate} onSubmit={this.onSubmit}>
+        {(props, formState) => (
+
+          <form {...props}>
+            <FieldEmail />
+            <FieldPassword />
+            <button type="submit" disabled={!formState.validForm || formState.submitting}>Submit</button>
+          </form>
+
+        )}
+      </Form>
+    )
+  }
+}
 ```
 
 The only catch is that we now need to return a `<form>` element since using the API this way won't provide it for us. The callback though does provide `props` which we can give the `form` for it's callbacks that were provided to `Form`. The callback also provides `formState` which is the primary reason to use this pattern.
