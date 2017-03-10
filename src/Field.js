@@ -27,12 +27,17 @@ class Field extends React.Component {
 
     if (typeof callback === 'function') {
       return callback(props, state, formState)
-    } else if (this.props.component) {
+
+    } else if (typeof this.props.component === 'string') {
       const type = this.props.type || 'text'
       switch(this.props.component) {
         case 'input': return <input type={type} name={name} {...props} />
         case 'textarea': return <textarea name={name} {...props} />
       }
+
+    } else if (this.props.component === false) {
+
+
     } else {
       throw new Exception('Field must have good shit')
     }
