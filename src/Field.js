@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactTestUtils from 'react-addons-test-utils'
 
 class Field extends React.Component {
 
