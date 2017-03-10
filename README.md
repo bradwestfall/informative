@@ -227,7 +227,7 @@ See `fieldState` below to see how we can customize the error response to our lik
 
 ## Submit Handling
 
-To provide custom submit handling, pass an `onSubmit` callback into `Form`. The `onSubmit` callback gets called when the form is submitted and passes the form's values and `formState` into the callback.
+To provide custom submit handling, pass an `onSubmit` callback prop into `Form`. The `onSubmit` callback gets called when the form is submitted and passes the form's values and `formState` into the callback.
 
 ```jsx
 class LoginForm extends React.Component {
