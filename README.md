@@ -35,10 +35,36 @@ Since this API is mostly about providing transient state to you, it tries to hav
 
 At this point, the form will behave as expected for an HTML form regarding submission and validation (no validation at this time).
 
+## Basic State Access
+
+By passing a string value for the `component` prop, the API will build our `<input />` field for us. But that doesn't give us access to the field or form's state.
+
+As an alternative, we can pass a custom component into the `component` prop:
+
+```jsx
+const Input = props => {
+  const { name, type, input, fieldState, formState } = props
+
+  // Access to field and form state
+  console.log('Field State', fieldState)
+  console.log('Form State State', formState)
+
+  return <input name={name} type={type} {...input} />
+}
+
+const Example = props => (
+  <Form>
+    <Field name="email" component={Input} />
+  </Form>
+)
+```
+
+Now that we're passing in our own version of `Input`, into `<Field>`, we will gain access to props like `fieldState` and `formState` (documented later in this document). Just be sure to pass along the `input` prop into your DOM input element to ensure the correct event callbacks are applied.
+
 
 ## Field Wraps
 
-Generally speaking, you probably have some sort of consistent wrapping DOM around all your input fields. The specifics of yours may differ, but the concept is probably similar to this:
+Generally speaking, you probably have some sort of consistent wrapping DOM around all your fields. The specifics of yours may differ, but the concept is probably similar to this HTML:
 
 ```html
 <div class="field-wrap">
@@ -49,7 +75,7 @@ Generally speaking, you probably have some sort of consistent wrapping DOM aroun
 </div>
 ```
 
-To achieve this without repeating the same HTML by hard-coding this around `Field`, create a custom version of `Field` like this:
+To achieve this without repeating the same wrapping-HTML by hard-coding it for each `Field`, create a custom version of `Field` like this:
 
 ```jsx
 const FieldWrap = props => {
@@ -57,11 +83,11 @@ const FieldWrap = props => {
 
   return (
     <Field {...rest}>
-      {(inputProps, fieldState, formState) => (
+      {(input, fieldState, formState) => (
         <div className="field-wrap">
           <label>{label}</label>
           <div className="input">
-            <input {...inputProps} type={type} />
+            <input {...input} type={type} />
           </div>
         </div>
       )}
@@ -70,7 +96,9 @@ const FieldWrap = props => {
 }
 ```
 
-In this case, our `FieldWrap` is returning `Field` and we're passing a function into `Field` to define the contents of our field-wrap logic. The name `FieldWrap` is not important as you may call yours whatever you want, or have many variations of it. This `FieldWrap` component can be used as follows:
+In this case, our `FieldWrap` is returning `Field` and we're passing a function into `Field` to define the contents of our field-wrap logic. The name "FieldWrap" is not important here. What matters is that we return `<Field>` and that we pass it a function. Then it also matters that we apply the `input` argument to our DOM input for events.
+
+The above `FieldWrap` component could be used like this:
 
 ```jsx
 const LoginForm = props => (
@@ -81,15 +109,14 @@ const LoginForm = props => (
 )
 ```
 
-Notice that by passing a function to `Field`, we get a callback with three values for `inputProps`, `fieldState`, and `formState`.
+You may have also noticed that by making a `FieldWrap` component that we have easy access to `fieldState` and `formState` in just the right place to use these values to make things like error messages.
 
-`inputProps` are important because you need to spread those over the `input` element. `inputProps` contains event handlers and other important information for our `input` element. Then as you can imagine, `fieldState` contains various state details about the field and `formState` has details about the overall form. State is documented later in this file.
+Also notice that through the `...rest` object, we are still passing the required `name` to `Field`.
 
-Also notice that through the `...rest` object, we are still passing the required `name` to `Field`
 
 ## Field Wrap Inputs
 
-The above example allows us to have a field wrap, but the result so far is always an `input` element. What if we want other things like `textarea` or `select`?
+The above example allows us to have a "field wrap", but the result so far is always an `input` element. What if we want other things like `textarea` or `select`?
 
 We can use a similar strategy that `Field` uses when it's not being wrapped - that is to pass a component as a prop into `FieldWrap`:
 
@@ -104,11 +131,11 @@ const FieldWrap = props => {
 
   return (
     <Field {...rest}>
-      {(inputProps, fieldState, formState) => (
+      {(input, fieldState, formState) => (
         <div className="field-wrap">
           <label htmlFor={`field-` + name}>{label}</label>
           <div className="input">
-            <Component {...inputProps} name={name} type={type} />
+            <Component {...input} name={name} type={type} />
           </div>
           <div className="error">
             {fieldState.error}

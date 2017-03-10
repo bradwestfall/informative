@@ -18,6 +18,7 @@
     "example:simple": "form=simple npm run example",
     "example:simple-validation": "form=simple-validation npm run example",
     "example:simple-submit-handle": "form=simple-submit-handle npm run example",
+    "example:basic-state-access": "form=basic-state-access npm run example",
     "example:field-wrap": "form=field-wrap npm run example"
   },
   "devDependencies": {
@@ -30,6 +31,7 @@
     "cross-env": "^3.2.3",
     "express": "^4.15.2",
     "react": "^15.4.2",
+    "react-addons-test-utils": "^15.4.2",
     "react-dom": "^15.4.2",
     "rimraf": "^2.6.1",
     "webpack": "^2.2.1",

@@ -12,11 +12,11 @@ const FieldWrap = props => {
 
   return (
     <Field {...rest}>
-      {(inputProps, fieldState, formState) => (
+      {(input, fieldState, formState) => (
         <div className="field-wrap">
           <label htmlFor={`field-` + name}>{label}</label>
           <div className="input">
-            <Component {...inputProps} name={name} type={type} />
+            <Component {...input} name={name} type={type} />
           </div>
           <div className="error">
             {fieldState.error}
@@ -31,8 +31,8 @@ class Example extends React.Component {
 
   validate(values) {
     const errors = {}
-    if (!/^[\w\d\.]+@[\w\d]+\.[\w]{2,9}$/.test(values.email)) errors.email = "Invalid Email"
-    if (!/^[\w\d]{6,20}$/.test(values.password)) errors.password = "Invalid Password"
+    if (!/^[\w\d\.]+@[\w\d]+\.[\w]{2,9}$/.test(values.email)) errors.email = 'Invalid Email'
+    if (!/^[\w\d]{6,20}$/.test(values.password)) errors.password = 'Invalid Password'
     return errors
   }
 
