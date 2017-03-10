@@ -17,10 +17,8 @@ class Example extends React.Component {
         {(props, formState) => {
           return (
             <form {...props}>
-              <Field name="email" component="input" /> {formState.errors.email}
-              <br />
-              <Field name="password" component="input" type="password" /> {formState.errors.password}
-              <br />
+              <Field name="email" component="input" /> {formState.errors.email}<br />
+              <Field name="password" component="input" type="password" /> {formState.errors.password}<br />
               <button type="submit">Submit</button>
             </form>
           )

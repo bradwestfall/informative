@@ -18,10 +18,8 @@ class Example extends React.Component {
   render() {
     return (
       <Form onSubmit={this.onSubmit}>
-        <Field name="email" component="input" />
-        <br />
-        <Field name="password" component="input" type="password" />
-        <br />
+        <Field name="email" component="input" /><br />
+        <Field name="password" component="input" type="password" /><br />
         <button type="submit">Submit</button>
       </Form>
     )
