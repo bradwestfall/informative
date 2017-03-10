@@ -1,9 +1,6 @@
 {
   "env": {
-    "commonjs": {
-      "presets": ["es2015", "stage-2", "react"]
-    },
-    "examples": {
+    "default": {
       "presets": ["es2015", "stage-2", "react"]
     }
   }

@@ -8,10 +8,10 @@ const Input = props => {
 }
 
 const FieldWrap = props => {
-  const { label, type, name, component: Component, ...rest } = props
+  const { label, type, name, component: Component } = props
 
   return (
-    <Field {...rest}>
+    <Field name={name}>
       {(input, fieldState, formState) => (
         <div className="field-wrap">
           <label htmlFor={`field-` + name}>{label}</label>

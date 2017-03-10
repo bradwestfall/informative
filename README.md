@@ -6,6 +6,14 @@
 npm install --save [tbd]
 ```
 
+## Examples
+
+There are several examples you can run after cloning the repo. To run each one just type this command and follow the prompts:
+
+```sh
+npm run examples
+```
+
 ## Basic Usage
 
 Let's start by creating a basic login form. The `Form` component is your main entry-point to the API. It will create an HTML form and in this case, two input fields for email and password:
@@ -114,7 +122,7 @@ You may have also noticed that by making a `FieldWrap` component that we have ea
 Also notice that through the `...rest` object, we are still passing the required `name` to `Field`.
 
 
-## Field Wrap Inputs
+### Field Wrap Inputs
 
 The above example allows us to have a "field wrap", but the result so far is always an `input` element. What if we want other things like `textarea` or `select`?
 
@@ -127,10 +135,10 @@ const Input = props => {
 }
 
 const FieldWrap = props => {
-  const { label, type, name, component: Component, ...rest } = props
+  const { label, type, name, component: Component } = props
 
   return (
-    <Field {...rest}>
+    <Field name={name}>
       {(input, fieldState, formState) => (
         <div className="field-wrap">
           <label htmlFor={`field-` + name}>{label}</label>
