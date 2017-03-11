@@ -1,9 +1,11 @@
-# forms
+# informative
+
+React forms similar to `redux-form` API but without redux
 
 ## Install
 
 ```sh
-npm install --save [tbd]
+npm install --save informative
 ```
 
 ## Examples
@@ -20,7 +22,7 @@ Let's start by creating a basic login form. The `Form` component is your main en
 
 ```jsx
 import React from 'react'
-import { Form, Field } from [tbd]
+import { Form, Field } from 'informative'
 
 const LoginForm = props => (
   <Form>

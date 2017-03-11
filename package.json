@@ -1,7 +1,7 @@
 {
-  "name": "forms",
+  "name": "informative",
   "version": "0.0.1",
-  "description": "",
+  "description": "React forms similar to `redux-form` API but without redux",
   "main": "dist/commonjs/index.js",
   "keywords": [
     "react",
