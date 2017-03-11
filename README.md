@@ -1,6 +1,6 @@
 # informative
 
-React forms similar to `redux-form` API but without redux
+React forms similar to [redux-form](http://redux-form.com/) API but without redux
 
 ## Install
 
