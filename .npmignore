@@ -4,6 +4,5 @@ src
 .editorconfig
 .npmignore
 npm-debug.log
-README.md
 todo.md
 webpack.*
