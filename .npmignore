@@ -1,8 +1,9 @@
 examples
+src
 .babelrc
 .editorconfig
 .npmignore
-webpack.*
 npm-debug.log
 README.md
 todo.md
+webpack.*
