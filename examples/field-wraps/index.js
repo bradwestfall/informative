@@ -1,29 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Form, Field } from 'src'
+import { Form } from 'src'
 
 const Input = props => {
   const { name, type, ...rest} = props
   return <input type={type || 'text'} id={`field-` + name} name={name} {...rest} />
 }
 
-const FieldWrap = props => {
-  const { label, type, name, component: Component } = props
-
+const CustomInput = props => {
+  const { input, formState, fieldState, label, name, type } = props;
   return (
-    <Field name={name}>
-      {(input, fieldState, formState) => (
-        <div className="field-wrap">
-          <label htmlFor={`field-` + name}>{label}</label>
-          <div className="input">
-            <Component {...input} name={name} type={type} />
-          </div>
-          <div className="error">
-            {fieldState.error}
-          </div>
-        </div>
-      )}
-    </Field>
+    <fieldset>
+      <label htmlFor={name}>{label}</label>
+      <Input {... input} type={type} />
+    </fieldset>
   )
 }
 
@@ -43,11 +33,12 @@ class Example extends React.Component {
 
   render() {
     const initialValues = { email: 'example@example.com', password: 'abc123' }
-
+    const Email = connectField("email")(CustomInput);
+    const Password = connectField("password")(CustomInput);
     return (
       <Form validate={this.validate} onSubmit={this.onSubmit} initialValues={initialValues}>
-        <FieldWrap label="Email" name="email" component={Input} />
-        <FieldWrap label="Password" name="password" type="password" component={Input} />
+        <Email label="Email" name="email" />
+        <Password label="Password" name="password" type="password" />
         <button type="submit">Submit</button>
       </Form>
     )
