@@ -21,6 +21,8 @@ class Form extends React.Component {
       submitFailed: false,
       submitting: false,
       validForm: true,
+      visited: false,
+      dirty: false,
       errors: {},
       fields: {},
       values: {}
@@ -69,9 +71,15 @@ class Form extends React.Component {
     // Apply new state
     newState.fields[name] = Object.assign(newState.fields[name], state)
 
-    // Set form values and validate
+    // Apply visited to form also
+    if (state.visited) newState.visited = true
+
+    // When the value has changed
     if (state.value) {
       newState.values[name] = state.value
+      newState.dirty = true
+
+      // Call to validate replaces state with new state
       newState = this.validate(name, newState)
     }
 
