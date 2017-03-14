@@ -1,4 +1,5 @@
 import React from 'react'
+import connectField from './connectField'
 
 class Field extends React.Component {
 
@@ -7,44 +8,29 @@ class Field extends React.Component {
   }
 
   render() {
-    const { children: callback, component: Component, name, ...rest } = this.props
-    const formState = this.context.getFormState() || {}
-    const fieldState = formState.fields[name]
+    const { component: Component, name, ...rest } = this.props
 
     // Bail if name not provided
     if (!name) throw new Error('the `name` prop must be provided to `<Field>`')
 
-    // Don't render if fieldState hasn't been setup
-    if (!fieldState) return null
-
-    const input = {
-      name,
-      value: fieldState.value,
-      onChange: e => this.context.setFieldState(name, { value: e.target.value, dirty: true }),
-      onFocus: e => this.context.setFieldState(name, { visited: true, active: true }),
-      onBlur: e => this.context.setFieldState(name, { active: false })
+    // If <Field /> was passed a component prop with a component value
+    // If we have a component the HOC will do all the work, just trust its magic
+    if (typeof Component === 'function') {
+      const WrappedComponent = connectField(name)(Componet);
+      return <WrappedComponent {...rest} />
     }
-
-    // If <Field /> is providing a field wrap by virtue of function
-    if (typeof callback === 'function') {
-      return callback(input, fieldState, formState)
 
     // If <Field /> was passed a string component
-    } else if (typeof Component === 'string') {
+    // Might want to change this prop to be "type" and not overload the Component prop with two jobs?
+    if (typeof Component === 'string') {
       const type = this.props.type || 'text'
       switch(Component) {
-        case 'input': return <input {...rest} type={type} name={name} {...input} />
-        case 'textarea': return <textarea {...rest} name={name} {...input} />
+        case 'input': return connectField(name)(<input {...rest} type={type} />)
+        case 'textarea': return connectField(name)(<textarea {...rest} />)
       }
-
-    // If <Field /> was passed a component prop with a component value
-    } else if (typeof Component === 'function') {
-      return <Component {...rest} name={name} input={input} fieldState={fieldState} formState={formState} />
-
-    // Only the above three are allowed
-    } else {
-      throw new Error('Field must have a component prop or pass a function as children to return an alternate field')
     }
+
+    throw new Error('Field must have a component prop or pass a function as children to return an alternate field')
   }
 }
 
