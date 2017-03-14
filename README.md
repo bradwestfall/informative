@@ -26,7 +26,7 @@ import { Form, Field } from 'informative'
 
 const LoginForm = props => (
   <Form>
-    <Field name="email" component="input" />
+    <Field name="email" component="input" type="email" />
     <Field name="password" component="input" type="password" />
   </Form>
 )
@@ -38,7 +38,7 @@ Since this API is mostly about providing transient state to you, it tries to hav
 
 ```html
 <form>
-  <input type="text" name="email" />
+  <input type="email" name="email" />
   <input type="password" name="password" />
 </form>
 ```
@@ -113,7 +113,7 @@ The above `FieldWrap` component could be used like this:
 ```jsx
 const LoginForm = props => (
   <Form>
-    <FieldWrap label="Email" name="email" />
+    <FieldWrap label="Email" name="email" type="email" />
     <FieldWrap label="Password" name="password" type="password" />
   </Form>
 )
@@ -174,7 +174,7 @@ Further abstraction can be done by making specific types of fields for quick use
 With our new `FieldWrap` component, we can now make easy field abstractions for common fields:
 
 ```jsx
-const FieldEmail = props => <FieldWrap label="Email" name="email" component={Input} {...props} />
+const FieldEmail = props => <FieldWrap label="Email" name="email" component={Input} type="email" {...props} />
 const FieldFirstName = props => <FieldWrap label="First Name" name="firstName" component={Input} {...props} />
 const FieldLastName = props => <FieldWrap label="Last Name" name="lastName" component={Input} {...props} />
 ```
