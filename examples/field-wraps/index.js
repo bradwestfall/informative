@@ -7,27 +7,65 @@ const Input = props => {
   return <input type={type || 'text'} id={`field-` + name} name={name} {...rest} />
 }
 
+// const FieldWrap = props => {
+//   const { label, type, name, component: Component } = props
+
+//   return (
+//     <Field name={name}>
+//       {(input, fieldState, formState) => (
+//         <div className="field-wrap">
+//           <label htmlFor={`field-` + name}>{label}</label>
+//           <div className="input">
+//             <Component {...input} name={name} type={type} />
+//           </div>
+//           <div className="error">
+//             {fieldState.error}
+//           </div>
+//         </div>
+//       )}
+//     </Field>
+//   )
+// }
+
 const FieldWrap = props => {
   const { label, type, name, component: Component } = props
 
   return (
     <Field name={name}>
-      {(input, fieldState, formState) => (
-        <div className="field-wrap">
-          <label htmlFor={`field-` + name}>{label}</label>
-          <div className="input">
-            <Component {...input} name={name} type={type} />
+      {(input, fieldState, formState) => {
+
+        console.log('Form State', formState)
+
+        return (
+          <div className="field-wrap">
+            <label htmlFor={`field-` + name}>{label}</label>
+            <div className="input">
+              <Component {...input} name={name} type={type} />
+            </div>
+            <div className="error">
+              {fieldState.error}
+            </div>
           </div>
-          <div className="error">
-            {fieldState.error}
-          </div>
-        </div>
-      )}
+        )
+      }}
     </Field>
   )
 }
 
 class Example extends React.Component {
+
+  constructor() {
+    super()
+    this.state = {
+      initialValues: { email: 'foo' }
+    }
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ initialValues: {email: 'brad@b.com'}})
+    }, 1000)
+  }
 
   validate(values) {
     const errors = {}
@@ -45,9 +83,9 @@ class Example extends React.Component {
     const initialValues = { email: 'example@example.com', password: 'abc123' }
 
     return (
-      <Form validate={this.validate} onSubmit={this.onSubmit} initialValues={initialValues}>
+      <Form validate={this.validate} onSubmit={this.onSubmit} initialValues={this.state.initialValues}>
         <FieldWrap label="Email" name="email" component={Input} />
-        <FieldWrap label="Password" name="password" type="password" component={Input} />
+        {/*<FieldWrap label="Password" name="password" type="password" component={Input} />*/}
         <button type="submit">Submit</button>
       </Form>
     )

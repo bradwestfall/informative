@@ -43,22 +43,60 @@ class Form extends React.Component {
     }
   }
 
+  componentWillMount() {
+    console.log('will mount')
+    this._earlyInitialValues = this.props.initialValues
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('will receive props')
+    this._earlyInitialValues = nextProps.initialValues
+    this.registerInitialValues(nextProps.initialValues)
+  }
+
+  registerInitialValues(initialValues) {
+    this.setState(prevState => {
+      const newState = clone(prevState)
+
+      for (let name in newState.fields) {
+        let value = String(initialValues[name])
+        newState.fields[name].value = value
+        newState.values[name] = value
+      }
+
+      newState.errors = clone(this.props.validate(newState.values) || {})
+      newState.validForm = !Object.keys(newState.errors).length
+
+      for (let name in newState.fields) {
+        newState.fields[name].error = newState.errors[name] || ''
+        newState.fields[name].validField = !newState.fields[name].error
+      }
+
+      return newState
+    })
+  }
+
+  setFieldValue(name, value, state) {
+    state.fields[name].value = value
+    state.values[name] = value
+    state.errors = clone(this.props.validate(state.values) || {})
+    state.validForm = !Object.keys(state.errors).length
+    state.fields[name].error = state.errors[name] || ''
+    state.fields[name].validField = !state.fields[name].error
+    return state
+  }
+
   registerField(name) {
     this.setState(prevState => {
+      let newState = clone(prevState)
+      newState.fields[name] = initialFieldState
 
-      // Get initial value if supplied
-      const initialValue = (this.props.initialValues && this.props.initialValues[name]) || ''
+      if (this._earlyInitialValues && this._earlyInitialValues[name]) {
+        newState = this.setFieldValue(name, String(this._earlyInitialValues[name]), newState)
+      }
 
-      const newState = clone(prevState)
-      newState.fields[name] = clone(initialFieldState)
-      newState.fields[name].value = initialValue
-      newState.values[name] = initialValue
-
-      // Validate field which returns new state
-      return this.validate(name, newState)
-
+      return newState
     })
-
   }
 
   getFormState() {
