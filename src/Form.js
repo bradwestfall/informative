@@ -28,8 +28,8 @@ class Form extends React.Component {
       values: {}
     }
     this.registerField = this.registerField.bind(this)
-    this.getFormState = this.getFormState.bind(this)
     this.setFieldState = this.setFieldState.bind(this)
+    this.getFormState = this.getFormState.bind(this)
     this.validate = this.validate.bind(this)
     this.submitFailed = this.submitFailed.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
@@ -44,29 +44,36 @@ class Form extends React.Component {
   }
 
   componentWillMount() {
-    console.log('will mount')
+    // No fields will have been registered at this point. So we're holding onto this
+    // value for when `registerField` has been called later on
     this._earlyInitialValues = this.props.initialValues
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('will receive props')
+    // There are some race conditions between receiving new initialValues props with
+    // this method and maybe or maybe not having any fields registered yet. Therefore,
+    // we will set `_earlyInitialValues` in anticipation of fields having not been
+    // registered...
     this._earlyInitialValues = nextProps.initialValues
-    this.registerInitialValues(nextProps.initialValues)
-  }
 
-  registerInitialValues(initialValues) {
+    // ... And we will take the appropriate steps to set these new initialValues
+    // with the assumption that fields may have been registered.
     this.setState(prevState => {
       const newState = clone(prevState)
 
+      // Iterate only registered fields to set values
       for (let name in newState.fields) {
-        let value = String(initialValues[name])
+        let value = String(nextProps.initialValues[name])
         newState.fields[name].value = value
         newState.values[name] = value
       }
 
+      // Validate the form. Note that this will only validate registered fields because
+      // `newState.values` can only be filled by registered fields
       newState.errors = clone(this.props.validate(newState.values) || {})
       newState.validForm = !Object.keys(newState.errors).length
 
+      // Iterage only registered fields again to update state with errors
       for (let name in newState.fields) {
         newState.fields[name].error = newState.errors[name] || ''
         newState.fields[name].validField = !newState.fields[name].error
@@ -76,31 +83,22 @@ class Form extends React.Component {
     })
   }
 
-  setFieldValue(name, value, state) {
-    state.fields[name].value = value
-    state.values[name] = value
-    state.errors = clone(this.props.validate(state.values) || {})
-    state.validForm = !Object.keys(state.errors).length
-    state.fields[name].error = state.errors[name] || ''
-    state.fields[name].validField = !state.fields[name].error
-    return state
-  }
-
   registerField(name) {
     this.setState(prevState => {
       let newState = clone(prevState)
       newState.fields[name] = initialFieldState
 
       if (this._earlyInitialValues && this._earlyInitialValues[name]) {
-        newState = this.setFieldValue(name, String(this._earlyInitialValues[name]), newState)
+        const value = String(this._earlyInitialValues[name])
+        newState.fields[name].value = value
+        newState.values[name] = value
+
+        // Call to validate replaces state with new state
+        newState = this.validate(name, newState)
       }
 
       return newState
     })
-  }
-
-  getFormState() {
-    return this.state
   }
 
   setFieldState(name, state) {
@@ -122,6 +120,10 @@ class Form extends React.Component {
     }
 
     this.setState(newState)
+  }
+
+  getFormState() {
+    return this.state
   }
 
   validate(name, state) {
