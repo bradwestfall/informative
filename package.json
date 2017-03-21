@@ -8,7 +8,8 @@
   },
   "keywords": [
     "react",
-    "forms"
+    "forms",
+    "state"
   ],
   "author": "Brad Westfall",
   "license": "MIT",
