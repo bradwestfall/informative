@@ -164,7 +164,7 @@ class Form extends React.Component {
       }
       if (this.props.onSubmit) {
         this.props.onSubmit(values, this.state)
-          .then(() => this.setState({ submitting: false }))
+          .then(() => this.setState({ submitting: false, dirty: false }))
           .catch(this.submitFailed)
       }
     })
