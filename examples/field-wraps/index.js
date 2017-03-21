@@ -29,6 +29,13 @@ const FieldWrap = props => {
 
 class Example extends React.Component {
 
+  constructor() {
+    super()
+    this.state = {
+      initialValues: { email: 'example@example.com', password: 'abc123' }
+    }
+  }
+
   validate(values) {
     const errors = {}
     if (!/^[\w\d\.]+@[\w\d]+\.[\w]{2,9}$/.test(values.email)) errors.email = 'Invalid Email'
@@ -42,10 +49,8 @@ class Example extends React.Component {
   }
 
   render() {
-    const initialValues = { email: 'example@example.com', password: 'abc123' }
-
     return (
-      <Form validate={this.validate} onSubmit={this.onSubmit}>
+      <Form validate={this.validate} onSubmit={this.onSubmit} initialValues={this.state.initialValues}>
         <FieldWrap label="Email" name="email" component={Input} />
         <FieldWrap label="Password" name="password" type="password" component={Input} />
         <button type="submit">Submit</button>
