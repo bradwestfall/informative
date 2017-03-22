@@ -46,14 +46,16 @@ class Form extends React.Component {
   componentWillMount() {
     // No fields will have been registered at this point. So we're holding onto this
     // value for when `registerField` has been called later on
-    this._earlyInitialValues = clone(this.props.initialValues)
+    if (this.props.initialValues) {
+      this._earlyInitialValues = clone(this.props.initialValues)
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     // This is the fastest and most effective way to see if initialValues has changed. A side
     // effect of this technique is that the order of properties matters for this comparison to
     // be true. But if the initialValues was truely unchanged, then so should the order.
-    if (JSON.stringify(nextProps.initialValues) === JSON.stringify(this._earlyInitialValues)) {
+    if (!nextProps.initialValues || JSON.stringify(nextProps.initialValues) === JSON.stringify(this._earlyInitialValues)) {
       return false
     }
 
