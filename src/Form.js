@@ -3,14 +3,14 @@ import React from 'react'
 // http://stackoverflow.com/a/5344074
 const clone = obj => JSON.parse(JSON.stringify(obj))
 
-const initialFieldState = {
+const initialFieldState = () => ({
   value: '',
   error: '',
   validField: true,
   dirty: false,
   visited: false,
   active: false
-}
+})
 
 class Form extends React.Component {
 
@@ -33,6 +33,7 @@ class Form extends React.Component {
     this.validate = this.validate.bind(this)
     this.submitFailed = this.submitFailed.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+    this.resetForm = this.resetForm.bind(this)
   }
 
   getChildContext() {
@@ -95,7 +96,7 @@ class Form extends React.Component {
   registerField(name) {
     this.setState(prevState => {
       let newState = clone(prevState)
-      newState.fields[name] = initialFieldState
+      newState.fields[name] = initialFieldState()
 
       if (this._earlyInitialValues && this._earlyInitialValues[name]) {
         const value = String(this._earlyInitialValues[name])
@@ -132,7 +133,9 @@ class Form extends React.Component {
   }
 
   getFormState() {
-    return this.state
+    return Object.assign({}, clone(this.state), {
+      resetForm: this.resetForm
+    })
   }
 
   validate(name, state) {
@@ -165,10 +168,24 @@ class Form extends React.Component {
         return false
       }
       if (this.props.onSubmit) {
-        this.props.onSubmit(values, this.state)
+        this.props.onSubmit(values, this.getFormState())
           .then(() => this.setState({ submitting: false, dirty: false }))
           .catch(this.submitFailed)
       }
+    })
+  }
+
+  resetForm() {
+    this.setState(prevState => {
+      const newState = clone(prevState)
+
+      // Iterate only registered fields to set values
+      for (let name in newState.fields) {
+        newState.fields[name] = initialFieldState()
+        newState.values[name] = ''
+      }
+
+      return newState
     })
   }
 
