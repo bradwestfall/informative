@@ -26,7 +26,7 @@
     "example:field-wraps": "form=field-wraps npm run example-server",
     "example:validation": "form=validation npm run example-server",
     "example:submit-handling": "form=submit-handling npm run example-server",
-    "test": "mocha test/.setup.js test/**/**.js"
+    "test": "cross-env BABEL_ENV=default mocha test/.setup.js test/**/**.js"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
