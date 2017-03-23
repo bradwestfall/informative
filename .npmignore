@@ -6,3 +6,4 @@ src
 npm-debug.log
 todo.md
 webpack.*
+test
