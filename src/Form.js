@@ -97,6 +97,7 @@ class Form extends React.Component {
     this.setState(prevState => {
       let newState = clone(prevState)
       newState.fields[name] = initialFieldState()
+      newState.values[name] = ''
 
       if (this._earlyInitialValues && this._earlyInitialValues[name]) {
         const value = String(this._earlyInitialValues[name])

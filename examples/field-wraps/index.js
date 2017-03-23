@@ -43,8 +43,9 @@ class Example extends React.Component {
     return errors
   }
 
-  onSubmit(values) {
-    console.log('Submit Values', values)
+  onSubmit(values, formState) {
+    console.log('Values', values)
+    console.log('Form State', formState)
     return Promise.resolve()
   }
 
