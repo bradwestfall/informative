@@ -195,7 +195,7 @@ class Form extends React.Component {
     }
 
     return typeof this.props.children === 'function'
-      ? this.props.children(props, this.state)
+      ? this.props.children(props, this.getFormState())
       : <form {...props}>{this.props.children}</form>
   }
 }
