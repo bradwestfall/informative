@@ -12,17 +12,21 @@ const FieldWrap = props => {
 
   return (
     <Field name={name}>
-      {(input, fieldState, formState) => (
-        <div className="field-wrap">
-          <label htmlFor={`field-` + name}>{label}</label>
-          <div className="input">
-            <Component {...input} name={name} type={type} />
+      {(input, fieldState, formState) => {
+
+        return (
+          <div className="field-wrap">
+            <label htmlFor={`field-` + name}>{label}</label>
+            <div className="input">
+              <Component {...input} name={name} type={type} />
+            </div>
+            <div className="error">
+              {fieldState.error}
+            </div>
           </div>
-          <div className="error">
-            {fieldState.error}
-          </div>
-        </div>
-      )}
+          )
+
+      }}
     </Field>
   )
 }

@@ -31,7 +31,6 @@ class Form extends React.Component {
     this.setFieldState = this.setFieldState.bind(this)
     this.getFormState = this.getFormState.bind(this)
     this.validate = this.validate.bind(this)
-    this.submitFailed = this.submitFailed.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
     this.resetForm = this.resetForm.bind(this)
   }
@@ -155,30 +154,35 @@ class Form extends React.Component {
     return newState
   }
 
-  submitFailed() {
-    this.setState({ submitting: false, submitFailed: true })
-  }
-
   onSubmit(e) {
     const { validForm, values } = this.state
     if (!validForm || this.props.onSubmit) e.preventDefault()
 
-    this.setState({ submitting: true, submitFailed: validForm, hasSubmitted: true }, () => {
-      if (!validForm) {
-        this.submitFailed()
-        return false
-      }
+    // Invalid form
+    if (!validForm) {
+      this.setState({ submitting: false, submitFailed: true, hasSubmitted: true })
+      return false
+    }
+
+    // New state just before submit
+    this.setState({ submitting: true, hasSubmitted: true, submitFailed: false }, () => {
+
+      // If a custom submit handler was provided
       if (this.props.onSubmit) {
         this.props.onSubmit(values, this.getFormState())
           .then(() => this.setState({ submitting: false, dirty: false }))
-          .catch(this.submitFailed)
+          .catch(() => this.setState({ submitting: false, submitFailed: true }))
       }
     })
   }
 
   resetForm() {
     this.setState(prevState => {
-      const newState = clone(prevState)
+      const newState = Object.assign(clone(prevState), {
+        hasSubmitted: false,
+        submitFailed: false,
+        submitting: false
+      })
 
       // Iterate only registered fields to set values
       for (let name in newState.fields) {
