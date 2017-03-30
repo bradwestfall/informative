@@ -25,6 +25,7 @@ Navigate to [localhost:3030](http://localhost:3030) to view the example. Current
 - [Initial Values](examples/initial-values/index.js)
 - [Reset Form](examples/reset-form/index.js)
 - [Field Wraps](examples/field-wraps/index.js)
+- [Full Featured Example](examples/full-featured/index.js)
 
 
 ## Basic Usage
