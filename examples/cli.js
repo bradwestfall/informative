@@ -6,7 +6,8 @@ var examples = {
   'Field Wraps': 'field-wraps',
   'Validation': 'validation',
   'Submit Handling': 'submit-handling',
-  'Initial Values': 'initial-values'
+  'Initial Values': 'initial-values',
+  'Reset Form': 'reset-form'
 }
 
 inquirer.prompt([{
