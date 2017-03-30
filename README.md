@@ -18,13 +18,13 @@ npm run examples
 
 Navigate to [localhost:3030](http://localhost:3030) to view the example. Currently there are examples for:
 
-- [Basic Usage](blob/master/examples/basic-usage/index.js)
-- [Basic State Access](blob/master/examples/basic-state-access/index.js)
-- [Submit Handling](blob/master/examples/submit-handling/index.js)
-- [Validation](blob/master/examples/validation/index.js)
-- [Initial Values](blob/master/examples/initial-values/index.js)
-- [Reset Form](blob/master/examples/reset-form/index.js)
-- [Field Wraps](blob/master/examples/field-wraps/index.js)
+- [Basic Usage](examples/basic-usage/index.js)
+- [Basic State Access](examples/basic-state-access/index.js)
+- [Submit Handling](examples/submit-handling/index.js)
+- [Validation](examples/validation/index.js)
+- [Initial Values](examples/initial-values/index.js)
+- [Reset Form](examples/reset-form/index.js)
+- [Field Wraps](examples/field-wraps/index.js)
 
 
 ## Basic Usage
