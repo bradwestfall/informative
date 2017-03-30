@@ -79,15 +79,18 @@ class Form extends React.Component {
         newState.values[name] = value
       }
 
-      // Validate the form. Note that this will only validate registered fields because
-      // `newState.values` can only be filled by registered fields
-      newState.errors = clone(this.props.validate(newState.values) || {})
-      newState.validForm = !Object.keys(newState.errors).length
+      if (this.props.validate) {
 
-      // Iterage only registered fields again to update state with errors
-      for (let name in newState.fields) {
-        newState.fields[name].error = newState.errors[name] || ''
-        newState.fields[name].validField = !newState.fields[name].error
+        // Validate the form. Note that this will only validate registered fields because
+        // `newState.values` can only be filled by registered fields
+        newState.errors = clone(this.props.validate(newState.values) || {})
+        newState.validForm = !Object.keys(newState.errors).length
+
+        // Iterage only registered fields again to update state with errors
+        for (let name in newState.fields) {
+          newState.fields[name].error = newState.errors[name] || ''
+          newState.fields[name].validField = !newState.fields[name].error
+        }
       }
 
       return newState
