@@ -5,7 +5,8 @@ var examples = {
   'Basic State Access': 'basic-state-access',
   'Field Wraps': 'field-wraps',
   'Validation': 'validation',
-  'Submit Handling': 'submit-handling'
+  'Submit Handling': 'submit-handling',
+  'Reset Form': 'reset-form'
 }
 
 inquirer.prompt([{

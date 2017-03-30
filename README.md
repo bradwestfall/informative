@@ -132,8 +132,8 @@ We can use a similar strategy that `Field` uses when it's not being wrapped - th
 
 ```jsx
 const Input = props => {
-  const { name, type, ...rest} = props
-  return <input type={type || 'text'} id={`field-` + name} name={name} {...rest} />
+  const { name, type, input } = props
+  return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
 }
 
 const FieldWrap = props => {
@@ -145,7 +145,7 @@ const FieldWrap = props => {
         <div className="field-wrap">
           <label htmlFor={`field-` + name}>{label}</label>
           <div className="input">
-            <Component {...input} name={name} type={type} />
+            <Component input={input} name={name} type={type} />
           </div>
           <div className="error">
             {fieldState.error}
