@@ -7,32 +7,29 @@ const Input = props => {
   return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
 }
 
-class Example extends React.Component {
+class ResetPassword extends React.Component {
 
   constructor() {
     super()
-    this.state = {
-      initialValues: { email: 'example@example.com', password: 'abc123' }
-    }
-    this.resetForm = this.resetForm.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
-  resetForm() {
+  onSubmit() {
     // The <Form /> component has a `resetForm` method that you can access via refs
-    this.refs.myform.resetForm()
+    // This pseudo code is supposed to show how you can do an async action like resetting
+    // a password, then you can reset the form if you want
+    return Promise.resolve().then(this.refs.myform.resetForm)
   }
 
   render() {
     return (
-      <div>
-        <Form initialValues={this.state.initialValues} ref="myform">
-          <Field name="email" component={Input} /><br />
-          <Field name="password" type="password" component={Input} /><br />
-          <button type="button" onClick={this.resetForm}>Reset</button>
-        </Form>
-      </div>
+      <Form onSubmit={this.onSubmit} ref="myform">
+        <Field name="password" component={Input} type="password" /><br />
+        <Field name="newPassword" component={Input} type="password" /><br />
+        <button type="submit">Change Password</button>
+      </Form>
     )
   }
 }
 
-ReactDOM.render(<Example />, document.getElementById('root'))
+ReactDOM.render(<ResetPassword />, document.getElementById('root'))

@@ -7,7 +7,7 @@ const Input = props => {
   return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
 }
 
-class Example extends React.Component {
+class EditUser extends React.Component {
 
   constructor() {
     super()
@@ -36,4 +36,4 @@ class Example extends React.Component {
   }
 }
 
-ReactDOM.render(<Example />, document.getElementById('root'))
+ReactDOM.render(<EditUser />, document.getElementById('root'))

@@ -14,6 +14,10 @@ const FieldWrap = props => {
     <Field name={name} {...rest}>
       {(input, fieldState, formState) => {
 
+        // Access to field and form state
+        console.log('Field State', fieldState)
+        console.log('Form State State', formState)
+
         return (
           <div className="field-wrap">
             <label htmlFor={`field-` + name}>{label}</label>
@@ -31,37 +35,23 @@ const FieldWrap = props => {
   )
 }
 
-class Example extends React.Component {
-
-  constructor() {
-    super()
-    this.state = {
-      initialValues: { email: 'example@example.com', password: 'abc123' }
-    }
-  }
+class LoginForm extends React.Component {
 
   validate(values) {
     const errors = {}
     if (!/^[\w\d\.]+@[\w\d]+\.[\w]{2,9}$/.test(values.email)) errors.email = 'Invalid Email'
-    if (!/^[\w\d]{6,20}$/.test(values.password)) errors.password = 'Invalid Password'
     return errors
-  }
-
-  onSubmit(values, formState) {
-    console.log('Values', values)
-    console.log('Form State', formState)
-    return Promise.resolve()
   }
 
   render() {
     return (
-      <Form validate={this.validate} onSubmit={this.onSubmit} initialValues={this.state.initialValues}>
+      <Form validate={this.validate}>
         <FieldWrap label="Email" name="email" component={Input} />
-        <FieldWrap label="Password" name="password" type="password" component={Input} />
+        <FieldWrap label="Password" name="password" component={Input} type="password" />
         <button type="submit">Submit</button>
       </Form>
     )
   }
 }
 
-ReactDOM.render(<Example />, document.getElementById('root'))
+ReactDOM.render(<LoginForm />, document.getElementById('root'))
