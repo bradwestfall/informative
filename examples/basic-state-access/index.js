@@ -14,7 +14,7 @@ const Input = props => {
 
 const Example = props => (
   <Form>
-    <Field name="email" component={Input} />
+    <Field name="email" component={Input} type="email" />
   </Form>
 )
 

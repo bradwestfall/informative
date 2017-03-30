@@ -1,6 +1,6 @@
 {
   "name": "informative",
-  "version": "0.0.9",
+  "version": "0.0.12",
   "description": "React forms with a similar API to `redux-form` but without redux",
   "main": "dist/commonjs/index.js",
   "repository": {
@@ -23,9 +23,12 @@
     "example-server": "cross-env BABEL_ENV=default EXAMPLE=$form node examples/server.js",
     "example:basic-usage": "form=basic-usage npm run example-server",
     "example:basic-state-access": "form=basic-state-access npm run example-server",
-    "example:field-wraps": "form=field-wraps npm run example-server",
-    "example:validation": "form=validation npm run example-server",
     "example:submit-handling": "form=submit-handling npm run example-server",
+    "example:validation": "form=validation npm run example-server",
+    "example:initial-values": "form=initial-values npm run example-server",
+    "example:reset-form": "form=reset-form npm run example-server",
+    "example:field-wraps": "form=field-wraps npm run example-server",
+    "example:full-featured": "form=full-featured npm run example-server",
     "test": "cross-env BABEL_ENV=default mocha test/.setup.js test/**/**.js"
   },
   "devDependencies": {

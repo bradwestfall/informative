@@ -30,8 +30,8 @@ class Form extends React.Component {
     this.registerField = this.registerField.bind(this)
     this.setFieldState = this.setFieldState.bind(this)
     this.getFormState = this.getFormState.bind(this)
+    this.onChange = this.onChange.bind(this)
     this.validate = this.validate.bind(this)
-    this.submitFailed = this.submitFailed.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
     this.resetForm = this.resetForm.bind(this)
   }
@@ -39,8 +39,9 @@ class Form extends React.Component {
   getChildContext() {
     return {
       registerField: this.registerField,
+      setFieldState: this.setFieldState,
       getFormState: this.getFormState,
-      setFieldState: this.setFieldState
+      onChange: this.onChange
     }
   }
 
@@ -78,15 +79,18 @@ class Form extends React.Component {
         newState.values[name] = value
       }
 
-      // Validate the form. Note that this will only validate registered fields because
-      // `newState.values` can only be filled by registered fields
-      newState.errors = clone(this.props.validate(newState.values) || {})
-      newState.validForm = !Object.keys(newState.errors).length
+      if (this.props.validate) {
 
-      // Iterage only registered fields again to update state with errors
-      for (let name in newState.fields) {
-        newState.fields[name].error = newState.errors[name] || ''
-        newState.fields[name].validField = !newState.fields[name].error
+        // Validate the form. Note that this will only validate registered fields because
+        // `newState.values` can only be filled by registered fields
+        newState.errors = clone(this.props.validate(newState.values) || {})
+        newState.validForm = !Object.keys(newState.errors).length
+
+        // Iterage only registered fields again to update state with errors
+        for (let name in newState.fields) {
+          newState.fields[name].error = newState.errors[name] || ''
+          newState.fields[name].validField = !newState.fields[name].error
+        }
       }
 
       return newState
@@ -112,7 +116,7 @@ class Form extends React.Component {
     })
   }
 
-  setFieldState(name, state) {
+  setFieldState(name, state, cb) {
     let newState = clone(this.state)
 
     // Apply new state
@@ -130,13 +134,20 @@ class Form extends React.Component {
       newState = this.validate(name, newState)
     }
 
-    this.setState(newState)
+    this.setState(newState, () => {
+      if (typeof cb === 'function') cb(this.getFormState())
+    })
   }
 
   getFormState() {
     return Object.assign({}, clone(this.state), {
       resetForm: this.resetForm
     })
+  }
+
+  onChange(name, formState) {
+    const { onChange } = this.props
+    if (onChange) onChange(name, formState)
   }
 
   validate(name, state) {
@@ -155,30 +166,35 @@ class Form extends React.Component {
     return newState
   }
 
-  submitFailed() {
-    this.setState({ submitting: false, submitFailed: true })
-  }
-
   onSubmit(e) {
     const { validForm, values } = this.state
     if (!validForm || this.props.onSubmit) e.preventDefault()
 
-    this.setState({ submitting: true, submitFailed: validForm, hasSubmitted: true }, () => {
-      if (!validForm) {
-        this.submitFailed()
-        return false
-      }
+    // Invalid form
+    if (!validForm) {
+      this.setState({ submitting: false, submitFailed: true, hasSubmitted: true })
+      return false
+    }
+
+    // New state just before submit
+    this.setState({ submitting: true, hasSubmitted: true, submitFailed: false }, () => {
+
+      // If a custom submit handler was provided
       if (this.props.onSubmit) {
         this.props.onSubmit(values, this.getFormState())
           .then(() => this.setState({ submitting: false, dirty: false }))
-          .catch(this.submitFailed)
+          .catch(() => this.setState({ submitting: false, submitFailed: true }))
       }
     })
   }
 
   resetForm() {
     this.setState(prevState => {
-      const newState = clone(prevState)
+      const newState = Object.assign(clone(prevState), {
+        hasSubmitted: false,
+        submitFailed: false,
+        submitting: false
+      })
 
       // Iterate only registered fields to set values
       for (let name in newState.fields) {
@@ -203,8 +219,9 @@ class Form extends React.Component {
 
 Form.childContextTypes = {
   registerField: React.PropTypes.func,
+  setFieldState: React.PropTypes.func,
   getFormState: React.PropTypes.func,
-  setFieldState: React.PropTypes.func
+  onChange: React.PropTypes.func
 }
 
 Form.propTypes = {

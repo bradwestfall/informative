@@ -22,5 +22,5 @@ app.listen(3030, 'localhost', function(err) {
     console.log(err);
     return;
   }
-  console.log('Listening at http://localhost:3030');
+  console.log('Listening at http://localhost:3030\nWaiting for build...');
 });
