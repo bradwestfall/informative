@@ -8,6 +8,7 @@ var examples = {
   'Initial Values': 'initial-values',
   'Reset Form': 'reset-form',
   'Field Wraps': 'field-wraps',
+  'Field Wraps with connectField HoC': 'field-wrap-hoc',
   'Full Featured Example': 'full-featured'
 }
 

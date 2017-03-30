@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Form, Field } from 'src'
+import { Form, connectField } from 'src'
 
 const Input = props => {
   const { name, type, input } = props
@@ -8,32 +8,27 @@ const Input = props => {
 }
 
 const FieldWrap = props => {
-  const { label, type, name, component: Component, ...rest } = props
+  const { input, fieldState, formState, label, type, name } = props
+
+  // Access to field and form state
+  // console.log('Field State', fieldState)
+  // console.log('Form State State', formState)
 
   return (
-    <Field name={name} {...rest}>
-      {(input, fieldState, formState) => {
-
-        // Access to field and form state
-        console.log('Field State', fieldState)
-        console.log('Form State State', formState)
-
-        return (
-          <div className="field-wrap">
-            <label htmlFor={`field-` + name}>{label}</label>
-            <div className="input">
-              <Component input={input} name={name} type={type} />
-            </div>
-            <div className="error">
-              {fieldState.error}
-            </div>
-          </div>
-        )
-
-      }}
-    </Field>
+    <div className="field-wrap">
+      <label htmlFor={`field-` + name}>{label}</label>
+      <div className="input">
+        <Input input={input} name={name} type={type} />
+      </div>
+      <div className="error">
+        {fieldState.error}
+      </div>
+    </div>
   )
 }
+
+// High-level abstraction fields created with `connectField` HoC
+const FieldEmail = connectField('email')(FieldWrap)
 
 class LoginForm extends React.Component {
 
@@ -50,7 +45,9 @@ class LoginForm extends React.Component {
 
     return (
       <Form validate={this.validate}>
-        <FieldWrap label="Email" name="email" component={Input} />
+        <FieldEmail label="Email" onChange={() => {
+          console.log('CHANGE')
+        }}/>
         <button type="submit">Submit</button>
       </Form>
     )

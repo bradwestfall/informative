@@ -28,6 +28,7 @@
     "example:initial-values": "form=initial-values npm run example-server",
     "example:reset-form": "form=reset-form npm run example-server",
     "example:field-wraps": "form=field-wraps npm run example-server",
+    "example:field-wrap-hoc": "form=field-wrap-hoc npm run example-server",
     "example:full-featured": "form=full-featured npm run example-server",
     "test": "cross-env BABEL_ENV=default mocha test/.setup.js test/**/**.js"
   },

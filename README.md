@@ -362,6 +362,64 @@ With `Input` as a component and now abstracted away from `FieldWrap`, you can pr
 Also note that the above example shows how field errors can be abstracted into a "Field Wrap" concept so the usage of the API is clean and simple at the top `<Form>` level.
 
 
+## `connectField` HoC
+
+If you'd rather use a higher order component to create a "Field Wrap" concept instead of using `<Field>` with a callback child, the `connectField` can be used like this:
+
+```jsx
+import { Form, connectField } from 'src'
+
+const Input = props => {
+  const { name, type, input } = props
+  return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
+}
+
+const FieldWrap = props => {
+  const { input, fieldState, formState, label, type, name } = props
+
+  // Access to field and form state
+  console.log('Field State', fieldState)
+  console.log('Form State State', formState)
+
+  return (
+    <div className="field-wrap">
+      <label htmlFor={`field-` + name}>{label}</label>
+      <div className="input">
+        <Input input={input} name={name} type={type} />
+      </div>
+      <div className="error">
+        {fieldState.error}
+      </div>
+    </div>
+  )
+}
+
+// High-level abstraction fields created with `connectField` HoC
+const FieldEmail = connectField('email')(FieldWrap)
+const FieldPassword = connectField('password')(FieldWrap)
+
+class LoginForm extends React.Component {
+
+  validate(values) {
+    const errors = {}
+    if (!/^[\w\d\.]+@[\w\d]+\.[\w]{2,9}$/.test(values.email)) errors.email = 'Invalid Email'
+    return errors
+  }
+
+  render() {
+    return (
+      <Form validate={this.validate}>
+        <FieldEmail label="Email" />
+        <FieldPassword label="Password" name="password" type="password" />
+        <button type="submit">Submit</button>
+      </Form>
+    )
+  }
+}
+```
+
+
+
 ## Field Abstractions
 
 Further abstraction can be done by making specific types of fields for quick use. For example, imaging having a `<FieldFirstName />` component which provides the same result as `<FieldWrap label="First Name" name="firstName" component={Input} />`.
