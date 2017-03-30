@@ -111,7 +111,7 @@ class Form extends React.Component {
     })
   }
 
-  setFieldState(name, state) {
+  setFieldState(name, state, cb) {
     let newState = clone(this.state)
 
     // Apply new state
@@ -129,7 +129,9 @@ class Form extends React.Component {
       newState = this.validate(name, newState)
     }
 
-    this.setState(newState)
+    this.setState(newState, () => {
+      if (typeof cb === 'function') cb(this.getFormState())
+    })
   }
 
   getFormState() {

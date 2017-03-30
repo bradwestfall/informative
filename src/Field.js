@@ -2,8 +2,23 @@ import React from 'react'
 
 class Field extends React.Component {
 
+  constructor() {
+    super()
+    this.onChange = this.onChange.bind(this)
+  }
+
   componentWillMount() {
     this.context.registerField(this.props.name)
+  }
+
+  onChange(e) {
+    const { name, onChange} = this.props
+    const newState = { value: e.target.value, dirty: true }
+    if (onChange) {
+      this.context.setFieldState(name, newState, formState => onChange(e, formState))
+    } else {
+      this.context.setFieldState(name, newState)
+    }
   }
 
   render() {
@@ -20,7 +35,7 @@ class Field extends React.Component {
     const input = {
       name,
       value: fieldState.value,
-      onChange: e => this.context.setFieldState(name, { value: e.target.value, dirty: true }),
+      onChange: this.onChange,
       onFocus: e => this.context.setFieldState(name, { visited: true, active: true }),
       onBlur: e => this.context.setFieldState(name, { active: false })
     }
@@ -52,11 +67,11 @@ Field.contextTypes = {
   registerField: React.PropTypes.func,
   getFormState: React.PropTypes.func,
   setFieldState: React.PropTypes.func
-  //component: React.PropTypes.string
 }
 
 Field.propTypes = {
-  name: React.PropTypes.string.isRequired
+  name: React.PropTypes.string.isRequired,
+  onChange: React.PropTypes.func
 }
 
 export default Field
