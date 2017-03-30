@@ -31,7 +31,7 @@ const FieldWrap = props => {
   )
 }
 
-// High-leve Field Abstractions
+// High-level Field Abstractions
 const FieldFirstName = props => <FieldWrap label="First Name" name="firstName" component={Input} {...props} />
 const FieldLastName = props => <FieldWrap label="Last Name" name="lastName" component={Input} {...props} />
 const FieldEmail = props => <FieldWrap label="Email" name="email" component={Input} type="email" {...props} />
