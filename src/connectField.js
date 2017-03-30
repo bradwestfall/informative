@@ -26,7 +26,7 @@ const connectField = name => {
 
         this.context.setFieldState(name, newState, formState => {
           if (onChange) onChange(e, formState)
-          this.context.onChange(name, formState)
+          this.context.onChange(name, formState) // call the form's onChange
         })
       }
 

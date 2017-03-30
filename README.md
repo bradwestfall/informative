@@ -362,12 +362,57 @@ With `Input` as a component and now abstracted away from `FieldWrap`, you can pr
 Also note that the above example shows how field errors can be abstracted into a "Field Wrap" concept so the usage of the API is clean and simple at the top `<Form>` level.
 
 
+## Field Abstractions
+
+Further abstraction can be done by making specific types of fields for quick use. For example, imaging having a `<FieldFirstName />` component which provides the same result as `<FieldWrap label="First Name" name="firstName" component={Input} />`.
+
+With our new `FieldWrap` component, we can now make easy field abstractions for common fields:
+
+```jsx
+const FieldEmail = props => <FieldWrap label="Email" name="email" component={Input} type="email" {...props} />
+const FieldFirstName = props => <FieldWrap label="First Name" name="firstName" component={Input} {...props} />
+const FieldLastName = props => <FieldWrap label="Last Name" name="lastName" component={Input} {...props} />
+```
+
+To be used like this:
+
+```jsx
+const SignupForm = props => (
+  <Form>
+    <FieldEmail />
+    <FieldEmail label="Repeat Email" name="repeatEmail" />
+    <FieldFirstName />
+    <FieldLastName />
+  </Form>
+)
+```
+
+We can even override defaults by still passing in props for `label` and `name`.
+
+
+## `onChange` for `<Field>` and `<Form>`
+
+Sometimes you'll want real-time state updates as the user types. This can be useful for debounced saves and all kinds of other use cases. By passing an `onChange` into `Field`, the API will call your callback function with the DOM event and the new `formState`.
+
+```jsx
+<Field name="email" input="input" onChange={(event, formState) => { ... }} />
+```
+
+You can also pass an `onChange` callback into `Form`. The `Form`'s version receives the `name` of the field that was changed followed by the `formState`.
+
+```jsx
+<Form onChange={(name, formState) => { ... }} />
+```
+
+The `Field`'s `onChange` will be called first before the `Form`'s `onChange`.
+
+
 ## `connectField` HoC
 
 If you'd rather use a higher order component to create a "Field Wrap" concept instead of using `<Field>` with a callback child, the `connectField` can be used like this:
 
 ```jsx
-import { Form, connectField } from 'src'
+import { Form, connectField } from 'informative'
 
 const Input = props => {
   const { name, type, input } = props
@@ -403,6 +448,7 @@ class LoginForm extends React.Component {
   validate(values) {
     const errors = {}
     if (!/^[\w\d\.]+@[\w\d]+\.[\w]{2,9}$/.test(values.email)) errors.email = 'Invalid Email'
+    if (!/^[\w\d]{6,20}$/.test(values.password)) errors.password = 'Invalid Password'
     return errors
   }
 
@@ -417,55 +463,6 @@ class LoginForm extends React.Component {
   }
 }
 ```
-
-
-
-## Field Abstractions
-
-Further abstraction can be done by making specific types of fields for quick use. For example, imaging having a `<FieldFirstName />` component which provides the same result as `<FieldWrap label="First Name" name="firstName" component={Input} />`.
-
-With our new `FieldWrap` component, we can now make easy field abstractions for common fields:
-
-```jsx
-const FieldEmail = props => <FieldWrap label="Email" name="email" component={Input} type="email" {...props} />
-const FieldFirstName = props => <FieldWrap label="First Name" name="firstName" component={Input} {...props} />
-const FieldLastName = props => <FieldWrap label="Last Name" name="lastName" component={Input} {...props} />
-```
-
-To be used like this:
-
-```jsx
-const SignupForm = props => (
-  <Form>
-    <FieldEmail />
-    <FieldEmail label="Repeat Email" name="repeatEmail" />
-    <FieldFirstName />
-    <FieldLastName />
-  </Form>
-)
-```
-
-We can even override defaults by still passing in props for `label` and `name`.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
