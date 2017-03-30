@@ -30,6 +30,7 @@ class Form extends React.Component {
     this.registerField = this.registerField.bind(this)
     this.setFieldState = this.setFieldState.bind(this)
     this.getFormState = this.getFormState.bind(this)
+    this.onChange = this.onChange.bind(this)
     this.validate = this.validate.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
     this.resetForm = this.resetForm.bind(this)
@@ -38,8 +39,9 @@ class Form extends React.Component {
   getChildContext() {
     return {
       registerField: this.registerField,
+      setFieldState: this.setFieldState,
       getFormState: this.getFormState,
-      setFieldState: this.setFieldState
+      onChange: this.onChange
     }
   }
 
@@ -140,6 +142,11 @@ class Form extends React.Component {
     })
   }
 
+  onChange(name, formState) {
+    const { onChange } = this.props
+    if (onChange) onChange(name, formState)
+  }
+
   validate(name, state) {
     if (!this.props.validate) return state
 
@@ -209,8 +216,9 @@ class Form extends React.Component {
 
 Form.childContextTypes = {
   registerField: React.PropTypes.func,
+  setFieldState: React.PropTypes.func,
   getFormState: React.PropTypes.func,
-  setFieldState: React.PropTypes.func
+  onChange: React.PropTypes.func
 }
 
 Form.propTypes = {

@@ -14,11 +14,11 @@ class Field extends React.Component {
   onChange(e) {
     const { name, onChange} = this.props
     const newState = { value: e.target.value, dirty: true }
-    if (onChange) {
-      this.context.setFieldState(name, newState, formState => onChange(e, formState))
-    } else {
-      this.context.setFieldState(name, newState)
-    }
+
+    this.context.setFieldState(name, newState, formState => {
+      if (onChange) onChange(e, formState)
+      this.context.onChange(name, formState)
+    })
   }
 
   render() {
@@ -65,8 +65,9 @@ class Field extends React.Component {
 
 Field.contextTypes = {
   registerField: React.PropTypes.func,
+  setFieldState: React.PropTypes.func,
   getFormState: React.PropTypes.func,
-  setFieldState: React.PropTypes.func
+  onChange: React.PropTypes.func
 }
 
 Field.propTypes = {
