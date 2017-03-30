@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom'
 import { Form, Field } from 'src'
 
 const Input = props => {
-  const { name, type, ...rest} = props
-  return <input type={type || 'text'} id={`field-` + name} name={name} {...rest} />
+  const { name, type, input } = props
+  return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
 }
 
 const FieldWrap = props => {
@@ -18,13 +18,13 @@ const FieldWrap = props => {
           <div className="field-wrap">
             <label htmlFor={`field-` + name}>{label}</label>
             <div className="input">
-              <Component {...input} name={name} type={type} />
+              <Component input={input} name={name} type={type} />
             </div>
             <div className="error">
               {fieldState.error}
             </div>
           </div>
-          )
+        )
 
       }}
     </Field>
