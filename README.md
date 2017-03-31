@@ -8,6 +8,80 @@ React forms with a similar API to [redux-form](http://redux-form.com/) but witho
 npm install --save informative
 ```
 
+## `formState`
+
+A primary goal of this API is to provide your form with real-time state changes about the form. The API keeps track of one state object for the entire form with the following properties with these initial values:
+
+```js
+formState = {
+  hasSubmitted: false,
+  submitFailed: false,
+  submitting: false,
+  validForm: true,
+  visited: false,
+  dirty: false,
+  errors: {},
+  fields: {},
+  values: {},
+}
+```
+
+Note that the examples below will demonstrate how to gain access to the form's state.
+
+
+#### hasSubmitted [`boolean: false`]
+
+Has the form been submitted yet? This defaults to `false` and is set to `true` when the form is submitted regardless of the response from the `onSubmit` callback or the response from the `validate` callback. This is set back to `false` after a call to `resetForm()`.
+
+#### submitFailed [`boolean: false`]
+
+Did the form fail submission in it's last attempt? This defaults to `false` and is set to `true` if the user-supplied validation fails or if the promise returned from the `onSubmit` callback is rejected. Once `true`, this value is set to `false` again when the form is submitted and user-supplied validation passes and the returned promise from the `onSubmit` callback is resolved. This is set back to `false` after a call to `resetForm()`.
+
+#### submitting [`boolean: false`]
+
+Is the form in the process of submitting? This defaults to `false` and is set to `true` when the form is submitted and if the user-supplied validation succeeds. This is set back to `false` when the returned promise from the `onSubmit` callback is rejected or resolved. This is set back to `false` after a call to `resetForm()`.
+
+#### validForm [`boolean: true`]
+
+Is the form valid according to the user-supplied validation callback? This defaults to `true` and is set to `false` any time the user-supplied validation callback returns an object with keys (representing errors)
+
+Upon submission, if this value is set to `false` then the user-supplied submit callback will not be called and the form will receive new state reflecting these changes `{ submitting: false, submitFailed: true, hasSubmitted: true }`
+
+#### visited [`boolean: false`]
+
+Have any of the form's fields been visited? This defaults to `false` and is changed to `true` when any field in the form has its `onChange`, `onBlur`, or `onFocus` events fire. This does not get set back to `false`, even after a call to `formReset()`.
+
+#### dirty [`boolean: false`]
+
+Have any of the form's fields been changed? This defaults to `false` and is changed to `true` when any field in the form has its `onChange` event fired. This is set back to `false` after a call to `resetForm()`.
+
+#### errors [`object`]
+
+This is an object that will either be empty when there are no errors, or will be filled with errors as supplied by the return value of the user-supplied validate callback. The presence of keys in this object is what will trigger `validForm` to be `false`
+
+#### fields [`object`]
+
+This is an object with one property for each field registered in the form. See more about this object in **fieldState** below.
+
+#### values [`object`]
+
+This is an object with one property for each field registered in the form. The value of each property is the respective value for each field.
+
+
+## `fieldState`
+
+__todo__
+
+
+
+
+
+
+
+
+
+
+
 ## Examples
 
 There are several examples you can run after cloning the repo. To run each one just type this command and follow the prompts:
@@ -83,7 +157,7 @@ const Example = props => (
 )
 ```
 
-By providing the component `Input` instead of a string, we will gain access to props like `fieldState` and `formState` (documented later in this document). `Input` is now expected to return a valid HTML form element of your choice (it doesn't have to be `<input />`). Just be sure to spread the `input` prop into your element to ensure the correct event callbacks are applied.
+By providing the component `Input` instead of a string, we will gain access to props like `fieldState` and `formState`. `Input` is now expected to return a valid HTML form element of your choice (it doesn't have to be `<input />`). Just be sure to spread the `input` prop into your element to ensure the correct event callbacks are applied.
 
 > Note: You may need to configure babel to understand JSX spread.
 
@@ -118,7 +192,7 @@ class LoginForm extends React.Component {
 
 Note that your submit handler callback will not be called if the form is invalid based on your validation rules. Validation and rules are discussed later in this document.
 
-`onSubmit` is expected to return a promise. This will tell the API whether any asynchronous operations were successful or not. When a rejected promise is returned to the API, the `formState.submitFailed` flag is turned to `true`. To see more about how state is handled in the API, see `formState` below.
+`onSubmit` is expected to return a promise. This will tell the API whether any asynchronous operations were successful or not. When a rejected promise is returned to the API, the formState will reflect these new changes: `{ submitting: false, submitFailed: true }`
 
 
 ## Validation
@@ -463,68 +537,3 @@ class LoginForm extends React.Component {
   }
 }
 ```
-
-
-
-## `formState`
-
-The API keeps track of one state object for the entire form with the following properties with these initial values:
-
-```js
-state = {
-  hasSubmitted: false,
-  submitFailed: false,
-  submitting: false,
-  validForm: true,
-  visited: false,
-  dirty: false,
-  errors: {},
-  fields: {},
-  values: {},
-}
-```
-
-#### hasSubmitted [`boolean: false`]
-
-Has the form been submitted yet? This defaults to `false` and is set to `true` when the form is submitted regardless of the response from the `onSubmit` callback or the response from the `validate` callback. This is set back to `false` after a call to `resetForm()`.
-
-#### submitFailed [`boolean: false`]
-
-Did the form fail submission in it's last attempt? This defaults to `false` and is set to `true` if the user-supplied validation fails or if the promise returned from the `onSubmit` callback is rejected. Once `true`, this value is set to `false` again when the form is submitted and user-supplied validation passes and the returned promise from the `onSubmit` callback is resolved. This is set back to `false` after a call to `resetForm()`.
-
-#### submitting [`boolean: false`]
-
-Is the form in the process of submitting? This defaults to `false` and is set to `true` when the form is submitted and if the user-supplied validation succeeds. This is set back to `false` when the returned promise from the `onSubmit` callback is rejected or resolved. This is set back to `false` after a call to `resetForm()`.
-
-#### validForm [`boolean: true`]
-
-Is the form valid according to the user-supplied validation callback? This defaults to `true` and is set to `false` any time the user-supplied validation callback returns an object with keys (representing errors)
-
-Upon submission, if this value is set to `false` then the user-supplied submit callback will not be called and the form will receive new state reflecting these changes `{ submitting: false, submitFailed: true, hasSubmitted: true }`
-
-#### visited [`boolean: false`]
-
-Have any of the form's fields been visited? This defaults to `false` and is changed to `true` when any field in the form has its `onChange`, `onBlur`, or `onFocus` events fire. This does not get set back to `false`, even after a call to `formReset()`.
-
-#### dirty [`boolean: false`]
-
-Have any of the form's fields been changed? This defaults to `false` and is changed to `true` when any field in the form has its `onChange` event fired. This is set back to `false` after a call to `resetForm()`.
-
-#### errors [`object`]
-
-This is an object that will either be empty when there are no errors, or will be filled with errors as supplied by the return value of the user-supplied validate callback. The presence of keys in this object is what will trigger `validForm` to be `false`
-
-#### fields [`object`]
-
-This is an object with one property for each field registered in the form. See more about this object in **fieldState** below.
-
-#### values [`object`]
-
-This is an object with one property for each field registered in the form. The value of each property is the respective value for each field.
-
-
-## `fieldState`
-
-__todo__
-
-
