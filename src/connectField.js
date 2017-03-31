@@ -32,7 +32,7 @@ const connectField = name => {
 
       render() {
         // Bail if name not provided
-        if (!name) throw new Error('You must provide a name to connectField. Usage connectField(name)(Component)')
+        if (!name) throw new Error('You must provide a `name` to `connectField`. Usage `connectField(name)(Component)`')
         const formState = this.context.getFormState() || {}
         const fieldState = formState.fields[name]
 

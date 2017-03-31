@@ -127,6 +127,8 @@ class Form extends React.Component {
 
     // When the value has changed
     if (state.hasOwnProperty('value')) {
+
+      // Set some formState values which are not passed into setFieldState
       newState.values[name] = state.value
       newState.dirty = true
 
