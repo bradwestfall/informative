@@ -126,7 +126,7 @@ class Form extends React.Component {
     if (state.visited) newState.visited = true
 
     // When the value has changed
-    if (state.value) {
+    if (state.hasOwnProperty('value')) {
       newState.values[name] = state.value
       newState.dirty = true
 
