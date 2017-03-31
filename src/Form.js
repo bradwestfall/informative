@@ -9,7 +9,7 @@ const initialFieldState = () => ({
   validField: true,
   dirty: false,
   visited: false,
-  active: false
+  active: false,
 })
 
 class Form extends React.Component {
@@ -25,7 +25,7 @@ class Form extends React.Component {
       dirty: false,
       errors: {},
       fields: {},
-      values: {}
+      values: {},
     }
     this.registerField = this.registerField.bind(this)
     this.setFieldState = this.setFieldState.bind(this)
@@ -193,7 +193,8 @@ class Form extends React.Component {
       const newState = Object.assign(clone(prevState), {
         hasSubmitted: false,
         submitFailed: false,
-        submitting: false
+        submitting: false,
+        dirty: false
       })
 
       // Iterate only registered fields to set values

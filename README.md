@@ -466,13 +466,65 @@ class LoginForm extends React.Component {
 
 
 
+## `formState`
+
+The API keeps track of one state object for the entire form with the following properties with these initial values:
+
+```js
+state = {
+  hasSubmitted: false,
+  submitFailed: false,
+  submitting: false,
+  validForm: true,
+  visited: false,
+  dirty: false,
+  errors: {},
+  fields: {},
+  values: {},
+}
+```
+
+#### hasSubmitted [`boolean: false`]
+
+Has the form been submitted yet? This defaults to `false` and is set to `true` when the form is submitted regardless of the response from the `onSubmit` callback or the response from the `validate` callback. This is set back to `false` after a call to `resetForm()`.
+
+#### submitFailed [`boolean: false`]
+
+Did the form fail submission in it's last attempt? This defaults to `false` and is set to `true` if the user-supplied validation fails or if the promise returned from the `onSubmit` callback is rejected. Once `true`, this value is set to `false` again when the form is submitted and user-supplied validation passes and the returned promise from the `onSubmit` callback is resolved. This is set back to `false` after a call to `resetForm()`.
+
+#### submitting [`boolean: false`]
+
+Is the form in the process of submitting? This defaults to `false` and is set to `true` when the form is submitted and if the user-supplied validation succeeds. This is set back to `false` when the returned promise from the `onSubmit` callback is rejected or resolved. This is set back to `false` after a call to `resetForm()`.
+
+#### validForm [`boolean: true`]
+
+Is the form valid according to the user-supplied validation callback? This defaults to `true` and is set to `false` any time the user-supplied validation callback returns an object with keys (representing errors)
+
+Upon submission, if this value is set to `false` then the user-supplied submit callback will not be called and the form will receive new state reflecting these changes `{ submitting: false, submitFailed: true, hasSubmitted: true }`
+
+#### visited [`boolean: false`]
+
+Have any of the form's fields been visited? This defaults to `false` and is changed to `true` when any field in the form has its `onChange`, `onBlur`, or `onFocus` events fire. This does not get set back to `false`, even after a call to `formReset()`.
+
+#### dirty [`boolean: false`]
+
+Have any of the form's fields been changed? This defaults to `false` and is changed to `true` when any field in the form has its `onChange` event fired. This is set back to `false` after a call to `resetForm()`.
+
+#### errors [`object`]
+
+This is an object that will either be empty when there are no errors, or will be filled with errors as supplied by the return value of the user-supplied validate callback. The presence of keys in this object is what will trigger `validForm` to be `false`
+
+#### fields [`object`]
+
+This is an object with one property for each field registered in the form. See more about this object in **fieldState** below.
+
+#### values [`object`]
+
+This is an object with one property for each field registered in the form. The value of each property is the respective value for each field.
 
 
 ## `fieldState`
 
-_todo_
+__todo__
 
 
-## `formState`
-
-_todo_
