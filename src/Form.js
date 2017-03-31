@@ -79,27 +79,14 @@ class Form extends React.Component {
         newState.values[name] = value
       }
 
-      if (this.props.validate) {
-
-        // Validate the form. Note that this will only validate registered fields because
-        // `newState.values` can only be filled by registered fields
-        newState.errors = clone(this.props.validate(newState.values) || {})
-        newState.validForm = !Object.keys(newState.errors).length
-
-        // Iterage only registered fields again to update state with errors
-        for (let name in newState.fields) {
-          newState.fields[name].error = newState.errors[name] || ''
-          newState.fields[name].validField = !newState.fields[name].error
-        }
-      }
-
-      return newState
+      // Call to validate replaces state with new state
+      return this.validate(newState)
     })
   }
 
   registerField(name) {
     this.setState(prevState => {
-      let newState = clone(prevState)
+      const newState = clone(prevState)
       newState.fields[name] = initialFieldState()
       newState.values[name] = ''
 
@@ -107,12 +94,10 @@ class Form extends React.Component {
         const value = String(this._earlyInitialValues[name])
         newState.fields[name].value = value
         newState.values[name] = value
-
-        // Call to validate replaces state with new state
-        newState = this.validate(name, newState)
       }
 
-      return newState
+      // Call to validate replaces state with new state
+      return this.validate(newState)
     })
   }
 
@@ -133,7 +118,7 @@ class Form extends React.Component {
       newState.dirty = true
 
       // Call to validate replaces state with new state
-      newState = this.validate(name, newState)
+      newState = this.validate(newState)
     }
 
     this.setState(newState, () => {
@@ -152,7 +137,7 @@ class Form extends React.Component {
     if (onChange) onChange(name, formState)
   }
 
-  validate(name, state) {
+  validate(state) {
     if (!this.props.validate) return state
 
     const newState = clone(state)
