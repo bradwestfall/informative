@@ -23,6 +23,7 @@ formState = {
   errors: {},
   fields: {},
   values: {},
+  resetForm: function
 }
 ```
 
@@ -43,7 +44,7 @@ Is the form in the process of submitting? This defaults to `false` and is set to
 
 #### validForm [`boolean: true`]
 
-Is the form valid according to the user-supplied validation callback? This defaults to `true` and is set to `false` any time the user-supplied validation callback returns an object with keys (representing errors)
+Is the form valid according to the user-supplied validation callback? This defaults to `true` and is set to `false` any time the user-supplied validation callback returns an object with keys (representing errors).
 
 Upon submission, if this value is set to `false` then the user-supplied submit callback will not be called and the form will receive new state reflecting these changes `{ submitting: false, submitFailed: true, hasSubmitted: true }`
 
@@ -67,19 +68,57 @@ This is an object with one property for each field registered in the form. See m
 
 This is an object with one property for each field registered in the form. The value of each property is the respective value for each field.
 
+#### resetForm() [`function`]
+
+This function can be called to reset the form. Resetting a form will have the effect of resetting these `formState` values:
+
+```js
+{ hasSubmitted: false, submitFailed: false, submitting: false, dirty: false }
+```
+
+It will also have the effect of resetting each field in `formState.fields` to it's default values (see below in **fieldState**) and setting each field in `formState.values` to have an empty string for its value.
+
 
 ## `fieldState`
 
-__todo__
+Each field's state object is stored in `formState.fields[name]` where `name` is the provided name of each field. There are several instances in this API where `fieldState` and `formState` are provided to you in a callback. You can always derive the `fieldState` by digging into `formState`, but when `fieldState` is provided to you, it's just for convenience.
 
+Each field's respective state has these default values:
 
+```js
+fieldState = {
+  value: '',
+  error: '',
+  validField: true,
+  visited: false,
+  dirty: false,
+  active: false,
+}
+```
 
+#### value [`string: ''`]
 
+This is the field's value which defaults to an empty string. This value is changed in real-time as the user interacts with the field and the field's `onChange` event is fired.
 
+#### error [`string: ''`]
 
+This is the error message or value given to this field by the user-supplied validation response. The default value is an empty string. This value is changed in real-time as the user with the field and the field's onChange event is fired.
 
+#### validField [`boolean: true`]
 
+Is the field valid according to the user-supplied validation callback for the form? This defaults to `true` and is set to `false` any time the user-supplied validation callback returns an object with keys matching a field's name, this value will be changed to `false`.
 
+#### visited [`boolean: false`]
+
+Has this field been visited? This defaults to `false` and is changed to `true` when the field's `onChange`, `onBlur`, or `onFocus` events fire. This is set back to `false` after a call to `resetForm()`.
+
+#### dirty [`boolean: false`]
+
+Has this field been changed? This defaults to `false` and is changed to `true` when the field's `onChange` event is fired. This is set back to `false` after a call to `resetForm()`.
+
+#### active [`boolean: false`]
+
+Is the field active (has focus)? This defaults to `false` and is changed to `true` when the field's `onFocus` event is fired. This is set back to `false` when the field's `onBlur` event is fired or after a call to `resetForm()`.
 
 
 ## Examples
@@ -104,7 +143,7 @@ Navigate to [localhost:3030](http://localhost:3030) to view the example. Current
 
 ## Basic Usage
 
-Let's start by creating a basic login form. The `Form` component is your main entry-point to the API. It will create an HTML form and in this case, two `input` fields for email and password:
+To create a basic form, use the `Form` component as your main entry-point into the API. It will create an HTML form and in this case, two `input` fields for email and password:
 
 ```jsx
 import React from 'react'

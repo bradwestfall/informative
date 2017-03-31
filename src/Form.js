@@ -7,8 +7,8 @@ const initialFieldState = () => ({
   value: '',
   error: '',
   validField: true,
-  dirty: false,
   visited: false,
+  dirty: false,
   active: false,
 })
 
