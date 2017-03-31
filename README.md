@@ -2,11 +2,32 @@
 
 React forms with a similar API to [redux-form](http://redux-form.com/) but without redux.
 
+
 ## Install
 
 ```sh
 npm install --save informative
 ```
+
+
+## Contents
+
+- [`formState`](#formstate)
+- [`fieldState`](#fieldstate)
+- [Examples](#examples)
+ - [Basic Usage](#basic-usage)
+ - [Basic State Access](#basic-state-access)
+ - [Submit Handling](#submit-handling)
+ - [Validation](#validation)
+ - [Top Level Access to `formState`](#top-level-access-to-formstate)
+ - [Initial Values](#initial-values)
+ - [Reset Form](#reset-form)
+ - [Field Wraps](#field-wraps)
+  - [Field Wrap with custom elements](#field-wrap-with-custom-elements)
+ - [Field Abstraction](#field-abstraction)
+ - [`onChange` for `<Field>` and `<Form>`](#onchange-for-field-and-form)
+ - [`connectField` HoC](#connectfield-hoc)
+
 
 ## `formState`
 
