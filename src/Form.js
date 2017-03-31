@@ -74,7 +74,7 @@ class Form extends React.Component {
 
       // Iterate only registered fields to set values
       for (let name in newState.fields) {
-        let value = String(nextProps.initialValues[name])
+        const value = String(nextProps.initialValues[name] || '')
         newState.fields[name].value = value
         newState.values[name] = value
       }
