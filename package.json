@@ -2,7 +2,7 @@
   "name": "informative",
   "version": "0.1.0",
   "description": "React forms with a similar API to `redux-form` but without redux",
-  "main": "dist/commonjs/index.js",
+  "main": "dist/index.js",
   "repository": {
     "url": "https://github.com/bradwestfall/informative.git"
   },
@@ -15,9 +15,8 @@
   "license": "MIT",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "npm run build:commonjs",
-    "build:commonjs": "npm run clean:commonjs && cross-env BABEL_ENV=default babel src --out-dir dist/commonjs",
-    "clean:commonjs": "rimraf dist/commonjs",
+    "build": "npm run clean && cross-env BABEL_ENV=default babel src --out-dir dist",
+    "clean": "rimraf dist/*",
     "examples": "cross-env BABEL_ENV=default node examples/cli.js",
     "example": "npm run examples",
     "example-server": "cross-env BABEL_ENV=default EXAMPLE=$form node examples/server.js",

@@ -1,28 +1,33 @@
-var path = require('path');
+var path = require('path')
+var webpack = require('webpack')
+
+var examplePath = process.env.EXAMPLE
 
 module.exports = {
-  entry: './src/index.js',
+  devtool: 'inline-source-map',
+  entry: [
+    'webpack-hot-middleware/client',
+    path.join(__dirname, 'examples', examplePath, 'index.js')
+  ],
   output: {
-    path: path.join(__dirname, 'lib'),
-    filename: 'main.js'
+    path: path.join(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/dist/'
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ],
+  resolve: {
+    alias: {
+      'src': path.resolve('./src')
+    }
   },
   module: {
     rules: [
-
-      // // First, run the linter.
-      // // It's important to do this before Babel processes the JS.
-      // {
-      //   test: /\.js$/,
-      //   enforce: 'pre',
-      //   loader: 'eslint-loader',
-      //   include: paths.appSrc
-      // },
-
-      // Process JS with Babel.
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
+        loaders: 'babel-loader',
+        exclude: /node_mudles/
       }
     ]
   }
