@@ -9,9 +9,9 @@ import Field from '../../src/Field';
 
 
 describe('connect field HOC', () => {
-  //This does feel kind of weird, maybe we should just pass
-  //the three "input" props as separate props?
-  //It will mean more, but its also more generic
+  // This does feel kind of weird, maybe we should just pass
+  // the three "input" props as separate props?
+  // It will mean more, but its also more generic
   const mockCustomInput = (props) => {
       return (
         <div className="field-wrap">
@@ -155,8 +155,8 @@ describe('connect field HOC', () => {
     });
   });
 
-  //The element wrapping doesn't work. Not sure why. isValidElement
-  //always returns false
+  // The element wrapping doesn't work. Not sure why. isValidElement
+  // always returns false
   describe.skip('element wrapping', () => {
     it('should be able to except an element and return a component', () => {
       const mockElement = connectField('test')(<mockCustomInput />);
