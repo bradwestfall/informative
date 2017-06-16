@@ -1,4 +1,4 @@
-var inquirer = require('inquirer');
+var inquirer = require('inquirer')
 
 var examples = {
   'Basic Usage': 'basic-usage',
@@ -20,4 +20,4 @@ inquirer.prompt([{
 }]).then(function(answers) {
   process.env.EXAMPLE = examples[answers.example]
   var server = require('./server')
-});
+})
