@@ -15,11 +15,11 @@
   "license": "MIT",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "npm run clean && cross-env BABEL_ENV=default babel src --out-dir dist",
+    "build": "npm run clean && cross-env babel src --out-dir dist",
     "clean": "rimraf dist/*",
-    "examples": "cross-env BABEL_ENV=default node examples/cli.js",
+    "examples": "cross-env node examples/cli.js",
     "example": "npm run examples",
-    "example-server": "cross-env BABEL_ENV=default EXAMPLE=$form node examples/server.js",
+    "example-server": "cross-env EXAMPLE=$form node examples/server.js",
     "example:basic-usage": "form=basic-usage npm run example-server",
     "example:basic-state-access": "form=basic-state-access npm run example-server",
     "example:submit-handling": "form=submit-handling npm run example-server",
@@ -29,7 +29,7 @@
     "example:field-wraps": "form=field-wraps npm run example-server",
     "example:field-wrap-hoc": "form=field-wrap-hoc npm run example-server",
     "example:full-featured": "form=full-featured npm run example-server",
-    "test": "cross-env BABEL_ENV=default mocha test/.setup.js test/**/**.js"
+    "test": "cross-env mocha test/.setup.js test/**/**.js"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
