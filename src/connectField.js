@@ -44,7 +44,7 @@ const connectField = name => {
           value: fieldState.value,
           onChange: this.onChange,
           onFocus: e => this.context.setFieldState(name, { visited: true, active: true }),
-          onBlur: e => this.context.setFieldState(name, { active: false })
+          onBlur: e => this.context.setFieldState(name, { active: false, touched: true })
         }
         return <WrappedComponent {...this.props} input={input} fieldState={fieldState} formState={formState} />;
       }

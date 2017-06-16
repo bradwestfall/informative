@@ -153,6 +153,24 @@ describe('connect field HOC', () => {
       input.simulate('blur');
       form.simulate('submit', { preventDefault: () => {} });
     });
+
+    it('should mark touched on blur', () => {
+      const verifyFields = (values, fields) => {
+        expect(fields.fields.test.touched).to.equal(true);
+        expect(fields.fields.test.active).to.equal(false);
+        return new Promise(resolve => resolve());
+      }
+      const ConnectCustomInput = connectField('test')(mockCustomInput);
+      const wrapperForm = mount(
+        <Form onSubmit={verifyFields}>
+          <ConnectCustomInput />
+        </Form>);
+      const form = wrapperForm.find('form');
+      const input = wrapperForm.find('input');
+      input.simulate('focus');
+      input.simulate('blur');
+      form.simulate('submit', { preventDefault: () => {} });
+    });
   });
 
   // The element wrapping doesn't work. Not sure why. isValidElement
