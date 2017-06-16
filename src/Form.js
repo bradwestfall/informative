@@ -10,6 +10,7 @@ const initialFieldState = () => ({
   visited: false,
   dirty: false,
   active: false,
+  touched: false,
 })
 
 class Form extends React.Component {

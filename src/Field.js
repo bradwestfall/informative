@@ -37,7 +37,7 @@ class Field extends React.Component {
       value: fieldState.value,
       onChange: this.onChange,
       onFocus: e => this.context.setFieldState(name, { visited: true, active: true }),
-      onBlur: e => this.context.setFieldState(name, { active: false })
+      onBlur: e => this.context.setFieldState(name, { active: false, touched: true })
     }
 
     // If <Field /> is providing a field wrap by virtue of function
