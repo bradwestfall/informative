@@ -114,6 +114,7 @@ fieldState = {
   visited: false,
   dirty: false,
   active: false,
+  touched: false
 }
 ```
 
@@ -123,7 +124,7 @@ This is the field's value which defaults to an empty string. This value is chang
 
 #### error [`string: ''`]
 
-This is the error message or value given to this field by the user-supplied validation response. The default value is an empty string. This value is changed in real-time as the user with the field and the field's onChange event is fired.
+This is the error message or value given to this field by the user-supplied validation response. While the default value is an empty string, validation occurs immediately when the form is loaded which might cause field errors. This value is changed in real-time as the user interacts with the field and the field's onChange event is fired.
 
 #### validField [`boolean: true`]
 
@@ -140,6 +141,10 @@ Has this field been changed? This defaults to `false` and is changed to `true` w
 #### active [`boolean: false`]
 
 Is the field active (has focus)? This defaults to `false` and is changed to `true` when the field's `onFocus` event is fired. This is set back to `false` when the field's `onBlur` event is fired or after a call to `resetForm()`.
+
+#### touched [`boolean: false`]
+
+Has the field been visited and then left. In other words, this defaults to `false` and is changed to `true` when the field's `onBlur` event is fired. This is set back to `false` after a call to `resetForm()`.
 
 
 ## Examples
