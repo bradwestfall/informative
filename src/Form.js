@@ -178,24 +178,25 @@ class Form extends React.Component {
       if (this.props.onSubmit) {
         const submitResponse = this.props.onSubmit(values, this.getFormState())
 
-        // Next Tick (wait for possible `componentWillUnmount()`). The user might have
-        // unmounted the form in their `onSubmit` callback
-        setTimeout(() => {
+        // If the response is a promise
+        if (typeof submitResponse === 'object' && typeof submitResponse.then === 'function') {
+          submitResponse
+            .then(() => {
 
-          // If the form is still mounted
-          if (this._isMounted) {
+              // Next Tick (wait for possible `componentWillUnmount()`). The user might have
+              // unmounted the form in their `onSubmit` callback
+              setTimeout(() => {
 
-            // If the response is a promise
-            if (typeof submitResponse === 'object' && typeof submitResponse.then === 'function') {
-              submitResponse
-                .then(() => this.setState({ submitting: false, dirty: false }))
-                .catch(() => this.setState({ submitting: false, submitFailed: true }))
-            } else {
-              throw new Error('`onSubmit` expectes the return value to be a promise.')
-            }
-
-          }
-        }, 0)
+                // If the form is still mounted
+                if (this._isMounted) {
+                  this.setState({ submitting: false, dirty: false })
+                }
+              }, 0)
+            })
+            .catch(() => this.setState({ submitting: false, submitFailed: true }))
+        } else {
+          throw new Error('`onSubmit` expectes the return value to be a promise.')
+        }
 
       }
     })
