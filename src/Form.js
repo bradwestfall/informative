@@ -15,6 +15,8 @@ const initialFieldState = () => ({
 
 class Form extends React.Component {
 
+  static _isMounted = false
+
   constructor() {
     super()
     this.state = {
@@ -47,11 +49,16 @@ class Form extends React.Component {
   }
 
   componentWillMount() {
+    this._isMounted = true
     // No fields will have been registered at this point. So we're holding onto this
     // value for when `registerField` has been called later on
     if (this.props.initialValues) {
       this._earlyInitialValues = clone(this.props.initialValues)
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false
   }
 
   componentWillReceiveProps(nextProps) {
@@ -169,9 +176,27 @@ class Form extends React.Component {
 
       // If a custom submit handler was provided
       if (this.props.onSubmit) {
-        this.props.onSubmit(values, this.getFormState())
-          .then(() => this.setState({ submitting: false, dirty: false }))
-          .catch(() => this.setState({ submitting: false, submitFailed: true }))
+        const submitResponse = this.props.onSubmit(values, this.getFormState())
+
+        // Next Tick (wait for possible `componentWillUnmount()`). The user might have
+        // unmounted the form in their `onSubmit` callback
+        setTimeout(() => {
+
+          // If the form is still mounted
+          if (this._isMounted) {
+
+            // If the response is a promise
+            if (typeof submitResponse === 'object' && typeof submitResponse.then === 'function') {
+              submitResponse
+                .then(() => this.setState({ submitting: false, dirty: false }))
+                .catch(() => this.setState({ submitting: false, submitFailed: true }))
+            } else {
+              throw new Error('`onSubmit` expectes the return value to be a promise.')
+            }
+
+          }
+        }, 0)
+
       }
     })
   }
