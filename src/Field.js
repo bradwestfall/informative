@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 class Field extends React.Component {
 
@@ -64,15 +65,15 @@ class Field extends React.Component {
 }
 
 Field.contextTypes = {
-  registerField: React.PropTypes.func,
-  setFieldState: React.PropTypes.func,
-  getFormState: React.PropTypes.func,
-  onChange: React.PropTypes.func
+  registerField: PropTypes.func,
+  setFieldState: PropTypes.func,
+  getFormState: PropTypes.func,
+  onChange: PropTypes.func
 }
 
 Field.propTypes = {
-  name: React.PropTypes.string.isRequired,
-  onChange: React.PropTypes.func
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func
 }
 
 export default Field

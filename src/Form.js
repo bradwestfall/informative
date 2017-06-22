@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 // http://stackoverflow.com/a/5344074
 const clone = obj => JSON.parse(JSON.stringify(obj))
@@ -233,16 +234,16 @@ class Form extends React.Component {
 }
 
 Form.childContextTypes = {
-  registerField: React.PropTypes.func,
-  setFieldState: React.PropTypes.func,
-  getFormState: React.PropTypes.func,
-  onChange: React.PropTypes.func
+  registerField: PropTypes.func,
+  setFieldState: PropTypes.func,
+  getFormState: PropTypes.func,
+  onChange: PropTypes.func
 }
 
 Form.propTypes = {
-  onSubmit: React.PropTypes.func,
-  validate: React.PropTypes.func,
-  initialValues: React.PropTypes.object
+  onSubmit: PropTypes.func,
+  validate: PropTypes.func,
+  initialValues: PropTypes.object
 }
 
 export default Form
