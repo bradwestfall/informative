@@ -18,6 +18,7 @@ npm install --save informative
   - [Basic Usage](#basic-usage)
   - [Basic State Access](#basic-state-access)
   - [Submit Handling](#submit-handling)
+  - [Redirects](#redirects)
   - [Validation](#validation)
   - [Top Level Access to `formState`](#top-level-access-to-formstate)
   - [Initial Values](#initial-values)
@@ -258,6 +259,23 @@ class LoginForm extends React.Component {
 Note that your submit handler callback will not be called if the form is invalid based on your validation rules. Validation and rules are discussed later in this document.
 
 `onSubmit` is expected to return a promise. This will tell the API whether any asynchronous operations were successful or not. When a rejected promise is returned to the API, the formState will reflect these new changes: `{ submitting: false, submitFailed: true }`
+
+
+## Redirects
+
+If your form needs to redirect after submission, the appropriate way to handle this is to return a promise with the first resolved `.then()` doing the redirect:
+
+```js
+onSubmit(values) {
+  return someXhrCall.then(() => {
+    history.push('/new-page')
+  })
+}
+```
+
+> This example assumes the `history` API from React Router
+
+Since our API for onSubmit is going to handle your return promise and set the form's state based on whether it was resolved or rejected, there could be a potential race condition where `setState` is called after the component has unmounted (causing an error because the redirect unmounted the form). But the API knows how to handle this race condition if you perform the redirect inside the first resolved `then()` before returning the promise from `onSubmit`. This race condition bug fix was implemented on v0.2.3
 
 
 ## Validation
