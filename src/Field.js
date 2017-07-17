@@ -28,7 +28,7 @@ class Field extends React.Component {
   }
 
   render() {
-    const { children: callback, component: Component, name, ...rest } = this.props
+    const { children, render, component: Component, name, ...rest } = this.props
     const formState = this.context.getFormState() || {}
     const fieldState = formState.fields[name]
 
@@ -47,8 +47,8 @@ class Field extends React.Component {
     }
 
     // If <Field /> is providing a field wrap by virtue of function
-    if (typeof callback === 'function') {
-      return callback(input, fieldState, formState)
+    if (typeof render === 'function') {
+      return render(input, fieldState, formState)
 
     // If <Field /> was passed a string component
     } else if (typeof Component === 'string') {
@@ -56,6 +56,7 @@ class Field extends React.Component {
       switch(Component) {
         case 'input': return <input {...rest} type={type} name={name} {...input} />
         case 'textarea': return <textarea {...rest} name={name} {...input} />
+        case 'select': return <select {...rest} name={name} {...input}>{children}</select>
       }
 
     // If <Field /> was passed a component prop with a component value

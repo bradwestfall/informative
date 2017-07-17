@@ -11,23 +11,19 @@ const FieldWrap = props => {
   const { label, type, name, component: Component, ...rest } = props
 
   return (
-    <Field name={name} {...rest}>
-      {(input, fieldState, formState) => {
-
-        return (
-          <div className="field-wrap">
-            <label htmlFor={`field-` + name}>{label}</label>
-            <div className="input">
-              <Component input={input} name={name} type={type} />
-            </div>
-            <div className="error">
-              {fieldState.error}
-            </div>
+    <Field name={name} {...rest} render={(input, fieldState, formState) => {
+      return (
+        <div className="field-wrap">
+          <label htmlFor={`field-` + name}>{label}</label>
+          <div className="input">
+            <Component input={input} name={name} type={type} />
           </div>
-        )
-
-      }}
-    </Field>
+          <div className="error">
+            {fieldState.error}
+          </div>
+        </div>
+      )
+    }} />
   )
 }
 
@@ -59,7 +55,7 @@ class UserForm extends React.Component {
   }
 
   onSubmit(values, formState) {
-    console.log('Submit Form')
+    console.log('Submit Form', values)
     return Promise.resolve()
   }
 
