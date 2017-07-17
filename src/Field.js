@@ -14,8 +14,13 @@ class Field extends React.Component {
 
   onChange(e) {
     const { name, onChange} = this.props
-    const newState = { value: e.target.value, dirty: true }
+    const { type, target } = e
 
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    const newState = { value, dirty: true }
+
+    // Set the field's state within the form, then after the new state
+    // call this callback
     this.context.setFieldState(name, newState, formState => {
       if (onChange) onChange(e, formState)
       this.context.onChange(name, formState) // call the form's onChange
