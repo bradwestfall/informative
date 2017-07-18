@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Form, connectField } from 'src'
 
-const Input = props => {
+const TextField = props => {
   const { name, type, input } = props
   return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
 }
@@ -11,14 +11,14 @@ const FieldWrap = props => {
   const { input, fieldState, formState, label, type, name } = props
 
   // Access to field and form state
-  // console.log('Field State', fieldState)
-  // console.log('Form State State', formState)
+  console.log('Field State', fieldState)
+  console.log('Form State State', formState)
 
   return (
     <div className="field-wrap">
       <label htmlFor={`field-` + name}>{label}</label>
       <div className="input">
-        <Input input={input} name={name} type={type} />
+        <TextField input={input} name={name} type={type} />
       </div>
       <div className="error">
         {fieldState.error}
@@ -45,9 +45,7 @@ class LoginForm extends React.Component {
 
     return (
       <Form validate={this.validate}>
-        <FieldEmail label="Email" onChange={() => {
-          console.log('CHANGE')
-        }}/>
+        <FieldEmail label="Email" />
         <button type="submit">Submit</button>
       </Form>
     )

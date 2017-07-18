@@ -7,20 +7,12 @@ class Field extends React.Component {
   constructor() {
     super()
     this.onChange = this.onChange.bind(this)
+    this.updateFieldState = this.updateFieldState.bind(this)
   }
 
   componentWillMount() {
     const { name, value } = this.props
     this.context.registerField(name, value)
-  }
-
-  updateFieldState(newState) {
-    const { name, onChange } = this.props
-
-    this.context.setFieldState(name, newState, formState => {
-      if (onChange) onChange(e, formState)   // call the field's onChange if the user provided one
-      this.context.onChange(name, formState) // call the form's onChange if the user provided one
-    })
   }
 
   // Prop Change for `value`
@@ -34,6 +26,14 @@ class Field extends React.Component {
     const { type, target } = e
     const value = target.type === 'checkbox' ? target.checked : target.value
     this.updateFieldState({ value, dirty: true })
+  }
+
+  updateFieldState(newState) {
+    const { name, onChange } = this.props
+    this.context.setFieldState(name, newState, formState => {
+      if (onChange) onChange(e, formState)   // call the field's onChange if the user provided one
+      this.context.onChange(name, formState) // call the form's onChange if the user provided one
+    })
   }
 
   render() {

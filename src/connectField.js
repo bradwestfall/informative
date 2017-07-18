@@ -8,10 +8,11 @@ const connectField = name => {
       constructor() {
         super()
         this.onChange = this.onChange.bind(this)
+        this.updateFieldState = this.updateFieldState.bind(this)
       }
 
       componentWillMount() {
-        this.context.registerField(name)
+        this.context.registerField(name, this.props.value)
       }
 
       static contextTypes = {
@@ -21,13 +22,24 @@ const connectField = name => {
         onChange: React.PropTypes.func,
       }
 
-      onChange(e) {
-        const { onChange} = this.props
-        const newState = { value: e.target.value, dirty: true }
+      // Prop Change for `value`
+      componentWillReceiveProps(nextProps) {
+        if (nextProps.value === this.props.value) return false
+        this.updateFieldState({ value: nextProps.value })
+      }
 
+      // DOM Change
+      onChange(e) {
+        const { type, target } = e
+        const value = target.type === 'checkbox' ? target.checked : target.value
+        this.updateFieldState({ value, dirty: true })
+      }
+
+      updateFieldState(newState) {
+        const { onChange } = this.props
         this.context.setFieldState(name, newState, formState => {
-          if (onChange) onChange(e, formState)
-          this.context.onChange(name, formState) // call the form's onChange
+          if (onChange) onChange(e, formState)   // call the field's onChange if the user provided one
+          this.context.onChange(name, formState) // call the form's onChange if the user provided one
         })
       }
 
@@ -47,6 +59,7 @@ const connectField = name => {
           onFocus: e => this.context.setFieldState(name, { visited: true, active: true }),
           onBlur: e => this.context.setFieldState(name, { active: false, touched: true })
         }
+
         return <WrappedComponent {...this.props} input={input} fieldState={fieldState} formState={formState} />;
       }
 

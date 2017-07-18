@@ -27,7 +27,7 @@ describe('connect field HOC', () => {
   }
 
   describe('name', () => {
-    it('should throw an error if now name is provided', () => {
+    it('should throw an error if no name is provided', () => {
       try {
         shallow(connectField()(mockCustomInput));
       } catch (e){
