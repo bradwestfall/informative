@@ -1,33 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Form, Field } from 'src'
+import { Form, Field, TextField } from 'src'
 
-const TextField = props => {
-  const { name, type, input, fieldState, formState } = props
-
-  // Access to field and form state
-  console.log('Field State', fieldState)
-  console.log('Form State State', formState)
-
-  return <input name={name} type={type} {...input} />
-}
 
 class LoginForm extends React.Component {
 
   validate(values) {
     const errors = {}
     if (!/^[\w\d\.]+@[\w\d]+\.[\w]{2,9}$/.test(values.email)) errors.email = 'Invalid Email'
+    if (!/^[\w\d]{6,20}$/.test(values.password)) errors.password = 'Invalid Password'
+    console.log('Validation Errors', errors)
     return errors
   }
 
   render() {
-
-    // The password field was left out of this example on purpose to limit
-    // the amount of console logs for state changes.
-
     return (
       <Form validate={this.validate}>
-        <Field name="email" component={TextField} /><br />
+        <Field name="email" component={TextField} type="email" /><br />
+        <Field name="password" component={TextField} type="password" /><br />
         <button type="submit">Submit</button>
       </Form>
     )

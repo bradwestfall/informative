@@ -60,11 +60,18 @@ class Form extends React.Component {
   registerField(name, value) {
     this.setState(prevState => {
       const newState = clone(prevState)
-      newState.fields[name] = initialFieldState(value)
-      newState.values[name] = newState.fields[name].value
 
-      // Call to validate replaces state with new state
-      return this.validate(newState)
+      // If the field doesn't exist
+      // OR, it does exist and the value is set and different
+      if (!newState.fields[name] || (newState.fields[name] && value !== undefined && newState.fields[name].value !== value)) {
+        newState.fields[name] = initialFieldState(value)
+        newState.values[name] = newState.fields[name].value
+
+        // Call to validate replaces state with new state
+        return this.validate(newState)
+      }
+
+      return prevState
     })
   }
 
@@ -184,13 +191,14 @@ class Form extends React.Component {
   }
 
   render() {
-    const props = {
-      onSubmit: this.onSubmit
-    }
-
-    return typeof this.props.children === 'function'
-      ? this.props.children(props, this.getFormState())
+    const props = { onSubmit: this.onSubmit }
+    const form = this.props.render
+      ? this.props.render(props, this.getFormState())
       : <form {...props}>{this.props.children}</form>
+
+    if (!form.type || form.type !== 'form') throw new Error('<Form render={fn} /> must return a single <form> DOM element.')
+
+    return form
   }
 }
 
@@ -204,7 +212,7 @@ Form.childContextTypes = {
 Form.propTypes = {
   onSubmit: PropTypes.func,
   validate: PropTypes.func,
-  initialValues: PropTypes.object
+  render: PropTypes.func
 }
 
 export default Form

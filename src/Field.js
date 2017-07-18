@@ -1,24 +1,37 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Input from './Input'
+import { TextField, CheckboxField, RadioField } from './FieldTypes'
 
 class Field extends React.Component {
 
   constructor() {
     super()
     this.onChange = this.onChange.bind(this)
+    this.getInitialValue = this.getInitialValue.bind(this)
     this.updateFieldState = this.updateFieldState.bind(this)
   }
 
   componentWillMount() {
-    const { name, value } = this.props
-    this.context.registerField(name, value)
+    const { name } = this.props
+    this.context.registerField(name, this.getInitialValue(this.props))
   }
 
   // Prop Change for `value`
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value === this.props.value) return false
-    this.updateFieldState({ value: nextProps.value })
+    if (nextProps.value === this.props.value && nextProps.checked === this.props.checked) return false
+    this.updateFieldState({ value: this.getInitialValue(nextProps) })
+  }
+
+  getInitialValue(props) {
+    const { component: Component, type, checked } = props
+    if (typeof Component === 'string' && Component.toLowerCase() === 'input' && type) {
+      if (type.toLowerCase() === 'checkbox') {
+        return props.checked
+      } else if (type.toLowerCase() === 'radio') {
+        return checked ? props.value : undefined
+      }
+    }
+    return props.value
   }
 
   // DOM Change
@@ -59,11 +72,19 @@ class Field extends React.Component {
     if (typeof render === 'function') {
       return render(input, fieldState, formState)
 
-    // If <Field component="string" /> was passed a string component
+    // If <Field component="input" /> was passed a string "input" component
+    } else if (typeof Component === 'string' && Component.toLowerCase() === 'input') {
+      const type = this.props.type
+      switch(type) {
+        case 'checkbox': return <CheckboxField {...rest} name={name} input={input} />
+        case 'radio': return <RadioField {...rest} name={name} input={input} />
+        case 'text':
+        default: return <TextField {...rest} type={type || 'text'} name={name} input={input} />
+      }
+
+    // If <Field component="[string]" /> was passed a string component
     } else if (typeof Component === 'string') {
-      const type = this.props.type || 'text'
       switch(Component) {
-        case 'input': return <Input originalProps={rest} type={type} name={name} {...input} />
         case 'textarea': return <textarea {...rest} name={name} {...input} />
         case 'select': return <select {...rest} name={name} {...input}>{children}</select>
         default: throw new Error('Invalid Component Prop: ', Component)

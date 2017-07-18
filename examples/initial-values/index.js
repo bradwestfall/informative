@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Form, Field } from 'src'
+import { Form, Field, TextField } from 'src'
 
-const TextField = props => {
-  const { name, type, input } = props
-  return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
-}
+// const TextField = props => {
+//   const { name, type, input } = props
+//   return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
+// }
 
 class EditUser extends React.Component {
 
