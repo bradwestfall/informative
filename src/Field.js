@@ -55,11 +55,11 @@ class Field extends React.Component {
       onBlur: e => this.context.setFieldState(name, { active: false, touched: true })
     }
 
-    // If <Field /> is providing a field wrap by virtue of function
+    // If <Field render={fn} /> is providing a field wrap by virtue of function
     if (typeof render === 'function') {
       return render(input, fieldState, formState)
 
-    // If <Field /> was passed a string component
+    // If <Field component="string" /> was passed a string component
     } else if (typeof Component === 'string') {
       const type = this.props.type || 'text'
       switch(Component) {
@@ -69,7 +69,7 @@ class Field extends React.Component {
         default: throw new Error('Invalid Component Prop: ', Component)
       }
 
-    // If <Field /> was passed a component prop with a component value
+    // If <Field component={Custom} /> was passed a component prop with a component value
     } else if (typeof Component === 'function') {
       return <Component {...rest} name={name} input={input} fieldState={fieldState} formState={formState} />
 
