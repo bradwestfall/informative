@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Form, Field } from 'src'
 
-const Input = props => {
+const TextField = props => {
   const { name, type, input, fieldState, formState } = props
 
   // Access to field and form state
@@ -27,7 +27,7 @@ class LoginForm extends React.Component {
 
     return (
       <Form validate={this.validate}>
-        <Field name="email" component={Input} /><br />
+        <Field name="email" component={TextField} /><br />
         <button type="submit">Submit</button>
       </Form>
     )

@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 // http://stackoverflow.com/a/5344074
 const clone = obj => JSON.parse(JSON.stringify(obj))
 
-const initialFieldState = () => ({
-  value: '',
+const initialFieldState = value => ({
+  value: value === undefined ? '' : value,
   error: '',
   validField: true,
   visited: false,
@@ -51,59 +51,17 @@ class Form extends React.Component {
 
   componentWillMount() {
     this._isMounted = true
-    // No fields will have been registered at this point. So we're holding onto this
-    // value for when `registerField` has been called later on
-    if (this.props.initialValues) {
-      this._earlyInitialValues = clone(this.props.initialValues)
-    }
   }
 
   componentWillUnmount() {
     this._isMounted = false
   }
 
-  componentWillReceiveProps(nextProps) {
-    // This is the fastest and most effective way to see if initialValues has changed. A side
-    // effect of this technique is that the order of properties matters for this comparison to
-    // be true. But if the initialValues was truely unchanged, then so should the order.
-    if (!nextProps.initialValues || JSON.stringify(nextProps.initialValues) === JSON.stringify(this._earlyInitialValues)) {
-      return false
-    }
-
-    // There are some race conditions between receiving new initialValues props with
-    // this method and maybe or maybe not having any fields registered yet. Therefore,
-    // we will set `_earlyInitialValues` in anticipation of fields having not been
-    // registered...
-    this._earlyInitialValues = clone(nextProps.initialValues)
-
-    // ... And we will take the appropriate steps to set these new initialValues
-    // with the assumption that fields may have been registered.
+  registerField(name, value) {
     this.setState(prevState => {
       const newState = clone(prevState)
-
-      // Iterate only registered fields to set values
-      for (let name in newState.fields) {
-        const value = String(nextProps.initialValues[name] || '')
-        newState.fields[name].value = value
-        newState.values[name] = value
-      }
-
-      // Call to validate replaces state with new state
-      return this.validate(newState)
-    })
-  }
-
-  registerField(name) {
-    this.setState(prevState => {
-      const newState = clone(prevState)
-      newState.fields[name] = initialFieldState()
-      newState.values[name] = ''
-
-      if (this._earlyInitialValues && this._earlyInitialValues[name]) {
-        const value = String(this._earlyInitialValues[name])
-        newState.fields[name].value = value
-        newState.values[name] = value
-      }
+      newState.fields[name] = initialFieldState(value)
+      newState.values[name] = newState.fields[name].value
 
       // Call to validate replaces state with new state
       return this.validate(newState)
@@ -111,28 +69,31 @@ class Form extends React.Component {
   }
 
   setFieldState(name, state, cb) {
-    let newState = clone(this.state)
+    this.setState(prevState => {
+      let newState = clone(prevState)
 
-    // Apply new state
-    newState.fields[name] = Object.assign(newState.fields[name], state)
+      // Apply new state
+      newState.fields[name] = Object.assign(newState.fields[name], state)
 
-    // Apply visited to form also
-    if (state.visited) newState.visited = true
+      // Apply visited to form also
+      if (state.visited) newState.visited = true
 
-    // When the value has changed
-    if (state.hasOwnProperty('value')) {
+      // If state has value property then the value changed
+      if (state.hasOwnProperty('value')) {
 
-      // Set some formState values which are not passed into setFieldState
-      newState.values[name] = state.value
-      newState.dirty = true
+        // Set some formState values which are not passed into setFieldState
+        newState.values[name] = state.value
+        newState.dirty = true
 
-      // Call to validate replaces state with new state
-      newState = this.validate(newState)
-    }
+        // Call to validate replaces state with new state
+        newState = this.validate(newState)
+      }
 
-    this.setState(newState, () => {
+      return newState
+    }, () => {
       if (typeof cb === 'function') cb(this.getFormState())
     })
+
   }
 
   getFormState() {

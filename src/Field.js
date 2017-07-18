@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Input from './Input'
 
 class Field extends React.Component {
 
@@ -9,22 +10,30 @@ class Field extends React.Component {
   }
 
   componentWillMount() {
-    this.context.registerField(this.props.name)
+    const { name, value } = this.props
+    this.context.registerField(name, value)
   }
 
-  onChange(e) {
-    const { name, onChange} = this.props
-    const { type, target } = e
+  updateFieldState(newState) {
+    const { name, onChange } = this.props
 
-    const value = target.type === 'checkbox' ? target.checked : target.value
-    const newState = { value, dirty: true }
-
-    // Set the field's state within the form, then after the new state
-    // call this callback
     this.context.setFieldState(name, newState, formState => {
-      if (onChange) onChange(e, formState)
-      this.context.onChange(name, formState) // call the form's onChange
+      if (onChange) onChange(e, formState)   // call the field's onChange if the user provided one
+      this.context.onChange(name, formState) // call the form's onChange if the user provided one
     })
+  }
+
+  // Prop Change for `value`
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value === this.props.value) return false
+    this.updateFieldState({ value: nextProps.value })
+  }
+
+  // DOM Change
+  onChange(e) {
+    const { type, target } = e
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    this.updateFieldState({ value, dirty: true })
   }
 
   render() {
@@ -54,9 +63,10 @@ class Field extends React.Component {
     } else if (typeof Component === 'string') {
       const type = this.props.type || 'text'
       switch(Component) {
-        case 'input': return <input {...rest} type={type} name={name} {...input} />
+        case 'input': return <Input {...rest} type={type} name={name} {...input} />
         case 'textarea': return <textarea {...rest} name={name} {...input} />
         case 'select': return <select {...rest} name={name} {...input}>{children}</select>
+        default: throw new Error('Invalid Component Prop: ', Component)
       }
 
     // If <Field /> was passed a component prop with a component value

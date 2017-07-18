@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Form, Field } from 'src'
 
-const Input = props => {
+const TextField = props => {
   const { name, type, input, fieldState, formState } = props
 
   // Access to field and form state
@@ -14,7 +14,7 @@ const Input = props => {
 
 const Example = props => (
   <Form>
-    <Field name="email" component={Input} type="email" />
+    <Field name="email" component={TextField} type="email" />
   </Form>
 )
 

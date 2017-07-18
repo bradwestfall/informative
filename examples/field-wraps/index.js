@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Form, Field } from 'src'
 
-const Input = props => {
+const TextField = props => {
   const { name, type, input } = props
   return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
 }
@@ -47,7 +47,7 @@ class LoginForm extends React.Component {
 
     return (
       <Form validate={this.validate}>
-        <FieldWrap label="Email" name="email" component={Input} />
+        <FieldWrap label="Email" name="email" component={TextField} />
         <button type="submit">Submit</button>
       </Form>
     )

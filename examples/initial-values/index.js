@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Form, Field } from 'src'
 
-const Input = props => {
+const TextField = props => {
   const { name, type, input } = props
   return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
 }
@@ -11,25 +11,24 @@ class EditUser extends React.Component {
 
   constructor() {
     super()
-    this.state = {
-      initialValues: {}
-    }
+    this.state = {}
   }
 
   componentWillMount() {
     // Simulate network latency for asynchronous `initialValues`
     setTimeout(() => {
       this.setState({
-        initialValues: { email: 'example@example.com', password: 'abc123' }
+        email: 'example@example.com',
+        password: 'abc123'
       })
-    }, 2000)
+    }, 500)
   }
 
   render() {
     return (
-      <Form initialValues={this.state.initialValues}>
-        <Field name="email" component={Input} /><br />
-        <Field name="password" type="password" component={Input} /><br />
+      <Form>
+        <Field name="email" component={TextField} value={this.state.email}/><br />
+        <Field name="password" type="password" component={TextField} value={this.state.password}/><br />
         <button type="submit">Submit</button>
       </Form>
     )
