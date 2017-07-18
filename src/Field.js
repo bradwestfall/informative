@@ -63,7 +63,7 @@ class Field extends React.Component {
     } else if (typeof Component === 'string') {
       const type = this.props.type || 'text'
       switch(Component) {
-        case 'input': return <Input {...rest} type={type} name={name} {...input} />
+        case 'input': return <Input originalProps={rest} type={type} name={name} {...input} />
         case 'textarea': return <textarea {...rest} name={name} {...input} />
         case 'select': return <select {...rest} name={name} {...input}>{children}</select>
         default: throw new Error('Invalid Component Prop: ', Component)
