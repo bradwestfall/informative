@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Form, Field, TextField } from 'src'
+import { Form, Field } from 'src'
 
 class EditUser extends React.Component {
 
@@ -22,8 +22,8 @@ class EditUser extends React.Component {
   render() {
     return (
       <Form>
-        <Field name="email" component={TextField} value={this.state.email}/><br />
-        <Field name="password" type="password" component={TextField} value={this.state.password}/><br />
+        <Field name="email" component="input" value={this.state.email}/><br />
+        <Field name="password" type="password" component="input" value={this.state.password}/><br />
         <button type="submit">Submit</button>
       </Form>
     )

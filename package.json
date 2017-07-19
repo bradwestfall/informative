@@ -1,7 +1,7 @@
 {
   "name": "informative",
   "version": "0.2.5",
-  "description": "React forms with a similar API to `redux-form` but without redux",
+  "description": "React forms with internal state-management",
   "main": "dist/index.js",
   "repository": {
     "url": "https://github.com/bradwestfall/informative.git"

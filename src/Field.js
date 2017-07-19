@@ -27,7 +27,7 @@ class Field extends React.Component {
     const { children, component, value, ...restProps } = props
 
     return {
-      value: value || '',
+      value: String(value) || '',
       props: { ...restProps, value }
     }
   }
@@ -49,8 +49,8 @@ class Field extends React.Component {
 
   updateFieldState(newState) {
     const { name, onChange } = this.props
-    this.context.setFieldState(name, newState, formState => {
-      if (onChange) onChange(e, formState)   // call the field's onChange if the user provided one
+    this.context.setFieldState(name, newState, (fieldState, formState) => {
+      if (onChange) onChange(fieldState, formState)   // call the field's onChange if the user provided one
       this.context.onChange(name, formState) // call the form's onChange if the user provided one
     })
   }

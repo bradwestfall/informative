@@ -136,7 +136,7 @@ class Form extends React.Component {
 
       return newState
     }, () => {
-      if (typeof cb === 'function') cb(this.getFormState())
+      if (typeof cb === 'function') cb(this.getFormState().fields[name], this.getFormState())
     })
 
   }
