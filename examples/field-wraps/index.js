@@ -1,26 +1,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Form, Field } from 'src'
-
-const TextField = props => {
-  const { name, type, input } = props
-  return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
-}
+import { Form, Field, TextField } from 'src'
 
 const FieldWrap = props => {
-  const { label, type, name, component: Component, ...rest } = props
+  const { label, component: Component, children, value, name, ...rest } = props
 
   return (
-    <Field name={name} {...rest} render={(input, fieldState, formState) => {
+    <Field name={name} {...rest} render={(events, fieldState, formState) => {
+
       // Access to field and form state
       console.log('Field State', fieldState)
       console.log('Form State State', formState)
 
       return (
         <div className="field-wrap">
-          <label htmlFor={`field-` + name}>{label}</label>
-          <div className="input">
-            <Component input={input} name={name} type={type} />
+          <label htmlFor={`field-${name}`}>{label}</label>
+          <div className="field">
+            <Component originalValue={value} name={name} fieldState={fieldState} formState={formState} events={events}>
+              {children}
+            </Component>
           </div>
           <div className="error">
             {fieldState.error}

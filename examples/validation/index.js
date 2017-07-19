@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Form, Field, TextField } from 'src'
-
+import { Form, Field } from 'src'
 
 class LoginForm extends React.Component {
 
@@ -16,8 +15,8 @@ class LoginForm extends React.Component {
   render() {
     return (
       <Form validate={this.validate}>
-        <Field name="email" component={TextField} type="email" /><br />
-        <Field name="password" component={TextField} type="password" /><br />
+        <Field name="email" component="input" type="email" /><br />
+        <Field name="password" component="input" type="password" /><br />
         <button type="submit">Submit</button>
       </Form>
     )

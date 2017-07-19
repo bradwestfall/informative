@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom'
 import { Form, Field } from 'src'
 
 const TextField = props => {
-  const { name, type, input, fieldState, formState, ...rest } = props
+  const { name, type, events, fieldState, formState } = props
 
   // Access to field and form state
   console.log('Field State', fieldState)
   console.log('Form State State', formState)
 
-  return <input {...rest} name={name} type={type} {...input} />
+  return <input name={name} type={type} {...events} />
 }
 
 const Example = props => (

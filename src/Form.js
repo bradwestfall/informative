@@ -211,6 +211,7 @@ class Form extends React.Component {
 
   resetForm() {
     this.setState(prevState => {
+
       const newState = Object.assign(clone(prevState), {
         hasSubmitted: false,
         submitFailed: false,
@@ -220,7 +221,7 @@ class Form extends React.Component {
 
       // Iterate only registered fields to set values
       for (let name in newState.fields) {
-        newState.fields[name] = initialFieldState()
+        newState.fields[name] = Object.assign({}, prevState.fields[name], initialFieldState())
         newState.values[name] = ''
       }
 
