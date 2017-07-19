@@ -94,6 +94,11 @@ class Form extends React.Component {
 
       // If the code gets this far, we're not in radio mode
 
+      // Checkbox
+      if (fieldState.props.checked === false) {
+        fieldState.value = ''
+      }
+
       // Blend fieldState into initialFieldState
       const newState = clone(prevState)
       newState.fields[name] = Object.assign(initialFieldState(), fieldState)
@@ -148,7 +153,7 @@ class Form extends React.Component {
     if (!this.props.validate) return state
 
     const newState = clone(state)
-    newState.errors = clone(this.props.validate(state.values) || {})
+    newState.errors = clone(this.props.validate(state.values) || {}, this.getFormState())
     newState.validForm = !Object.keys(newState.errors).length
 
     // Iterate all existing fields and change their `error` message and `validField`

@@ -56,7 +56,7 @@ class Field extends React.Component {
   }
 
   render() {
-    const { children, render, component: Component, name, value: originalValue } = this.props
+    const { render, component: Component, name, value: originalValue, children } = this.props
     const formState = this.context.getFormState() || {}
     const fieldState = formState.fields[name]
 
@@ -75,16 +75,16 @@ class Field extends React.Component {
 
     // If <Field render={fn} /> is providing a field wrap by virtue of function
     if (typeof render === 'function') {
-      return render(originalValue, events, fieldState, formState)
+      return render(events, fieldState, formState)
 
     // If <Field component="input" /> was passed a string "input" component
     } else if (typeof Component === 'string' && Component.toLowerCase() === 'input') {
       const type = this.props.type
       switch(type) {
-        case 'checkbox': return <CheckboxField originalValue={originalValue} fieldState={fieldState} events={events} />
-        case 'radio': return <RadioField originalValue={originalValue} fieldState={fieldState} events={events} />
+        case 'checkbox': return <CheckboxField name={name} originalValue={originalValue} fieldState={fieldState} events={events} />
+        case 'radio': return <RadioField name={name} originalValue={originalValue} fieldState={fieldState} events={events} />
         case 'text':
-        default: return <TextField fieldState={fieldState} events={events} />
+        default: return <TextField name={name} fieldState={fieldState} events={events} />
       }
 
     // If <Field component="[string]" /> was passed a string component
@@ -92,14 +92,14 @@ class Field extends React.Component {
       switch(Component) {
         case 'textarea':
           if (children) throw new Error('textarea fields use the `value` prop instead of children - https://facebook.github.io/react/docs/forms.html#the-textarea-tag')
-          return <TextareaField fieldState={fieldState} events={events} />
-        case 'select': return <SelectField fieldState={fieldState} events={events}>{children}</SelectField>
+          return <TextareaField name={name} fieldState={fieldState} events={events} />
+        case 'select': return <SelectField name={name} fieldState={fieldState} events={events}>{children}</SelectField>
         default: throw new Error('Invalid string value for `component` prop of <Field /> :', Component)
       }
 
     // If <Field component={CustomField} /> was passed a component prop with a custom component
     } else if (typeof Component === 'function') {
-      return <Component originalValue={originalValue} fieldState={fieldState} formState={formState} events={events}>{children}</Component>
+      return <Component name={name} originalValue={originalValue} fieldState={fieldState} formState={formState} events={events}>{children}</Component>
 
     // Only the above three are allowed
     } else {

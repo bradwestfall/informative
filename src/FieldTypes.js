@@ -5,11 +5,12 @@ import PropTypes from 'prop-types'
   <input type="text">
 *****************************************/
 
-const TextField = ({ fieldState, events }) => (
-  <input type={fieldState.props.type || 'text'} value={fieldState.value} {...events} />
+const TextField = ({ name, fieldState, events }) => (
+  <input name={name} type={fieldState.props.type || 'text'} value={fieldState.value} {...events} />
 )
 
 TextField.propTypes = {
+  name: PropTypes.string.isRequired,
   fieldState: PropTypes.object.isRequired,
   events: PropTypes.object.isRequired
 }
@@ -18,13 +19,14 @@ TextField.propTypes = {
   <input type="checkbox>
 *****************************************/
 
-const CheckboxField = ({ originalValue, fieldState, events }) => {
+const CheckboxField = ({ name, originalValue, fieldState, events }) => {
   const { value: stateValue } = fieldState
   const checked = stateValue !== ''
-  return <input type="checkbox" value={originalValue} checked={checked} {...events} />
+  return <input name={name} type="checkbox" value={originalValue} checked={checked} {...events} />
 }
 
 CheckboxField.propTypes = {
+  name: PropTypes.string.isRequired,
   originalValue: PropTypes.any.isRequired,
   fieldState: PropTypes.object.isRequired,
   events: PropTypes.object.isRequired
@@ -34,14 +36,15 @@ CheckboxField.propTypes = {
   <input type="radio>
 *****************************************/
 
-const RadioField = ({ originalValue, fieldState, events }) => {
+const RadioField = ({ name, originalValue, fieldState, events }) => {
   const { value: stateValue } = fieldState
   const originalProps = fieldState.props[originalValue]
   const checked = stateValue === originalValue
-  return <input type="radio" value={originalValue} checked={checked} {...events} />
+  return <input name={name} type="radio" value={originalValue} checked={checked} {...events} />
 }
 
 RadioField.propTypes = {
+  name: PropTypes.string.isRequired,
   originalValue: PropTypes.any.isRequired,
   fieldState: PropTypes.object.isRequired,
   events: PropTypes.object.isRequired
@@ -51,11 +54,12 @@ RadioField.propTypes = {
   <select>
 *****************************************/
 
-const SelectField = ({ children, fieldState, events }) => {
-  return <select value={fieldState.value} {...events}>{children}</select>
+const SelectField = ({ name, children, fieldState, events }) => {
+  return <select name={name} value={fieldState.value} {...events}>{children}</select>
 }
 
 SelectField.propTypes = {
+  name: PropTypes.string.isRequired,
   fieldState: PropTypes.object.isRequired,
   events: PropTypes.object.isRequired
 }
@@ -64,11 +68,12 @@ SelectField.propTypes = {
   <textarea>
 *****************************************/
 
-const TextareaField = ({ fieldState, events }) => (
-  <textarea value={fieldState.value} {...events} />
+const TextareaField = ({ name, fieldState, events }) => (
+  <textarea name={name} value={fieldState.value} {...events} />
 )
 
 TextareaField.propTypes = {
+  name: PropTypes.string.isRequired,
   fieldState: PropTypes.object.isRequired,
   events: PropTypes.object.isRequired
 }

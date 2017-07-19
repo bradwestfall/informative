@@ -196,7 +196,7 @@ The above usage of `Form` and `Field` will create a simple form like this:
 </form>
 ```
 
-At this point, the form will behave as expected for an HTML form regarding submission and validation (no validation at this time).
+At this point, the form will behave as expected for an HTML form regarding submission and validation. In the example, there is no `validate` prop, so no valication would occur. Note that HTML5 form validation will occur unless the `novalidate` attribute is passed into `<form />`.
 
 
 ## Basic State Access
@@ -280,12 +280,12 @@ Since our API for onSubmit is going to handle your return promise and set the fo
 
 ## Validation
 
-To provide custom validation, pass a `validate` callback prop into `Form`. The `validate` callback gets called with every value change of any field. It receives the form's values as an argument and is expected to return an error object with each field's name as a property and a value that corresponds to the error. Note that only fields that have errors should be returned in the error object.
+To provide custom validation, pass a `validate` callback prop into `Form`. The `validate` callback gets called with every value change of any field along with `formState` for reference. It receives the form's values as an argument and is expected to return an error object with each field's name as a property and a value that corresponds to the error. Note that only fields that have errors should be returned in the error object.
 
 ```jsx
 class LoginForm extends React.Component {
 
-  validate(values) {
+  validate(values, formState) {
     const errors = {}
     if (!/^[\w\d\.]+@[\w\d]+\.[\w]{2,9}$/.test(values.email)) errors.email = 'Invalid Email'
     if (!/^[\w\d]{6,20}$/.test(values.password)) errors.password = 'Invalid Password'
@@ -304,7 +304,7 @@ class LoginForm extends React.Component {
 }
 ```
 
-There are much more elegant ways of writing validation such that you wouldn't have to re-write rules for every form, but this example shows a basic strategy for filling an error object with errors for email and password:
+There are much more elegant ways of writing validation such that you wouldn't have to re-write rules for every form, but this example shows a proof-of-concept for filling an error object with errors for email and password:
 
 ```json
 { "email": "Invalid Email", "password": "Invalid Password" }
