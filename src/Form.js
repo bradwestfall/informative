@@ -142,14 +142,11 @@ class Form extends React.Component {
   }
 
   getFormState() {
-    return Object.assign({}, clone(this.state), {
-      resetForm: this.resetForm
-    })
+    return clone(this.state)
   }
 
-  onChange(name, formState) {
-    const { onChange } = this.props
-    if (onChange) onChange(name, formState)
+  onChange(name, e) {
+    if (this.props.onChange) this.props.onChange(this.getFormState(), name, e)
   }
 
   validate(state) {

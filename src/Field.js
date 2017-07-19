@@ -44,14 +44,14 @@ class Field extends React.Component {
       value = target.value
     }
 
-    this.updateFieldState({ value, dirty: true })
+    this.updateFieldState({ value, dirty: true }, e)
   }
 
-  updateFieldState(newState) {
+  updateFieldState(newState, e = {}) {
     const { name, onChange } = this.props
     this.context.setFieldState(name, newState, (fieldState, formState) => {
-      if (onChange) onChange(fieldState, formState)   // call the field's onChange if the user provided one
-      this.context.onChange(name, formState) // call the form's onChange if the user provided one
+      if (onChange) onChange(fieldState, formState, e)   // call the field's onChange if the user provided one
+      this.context.onChange(name, e)                     // call the form's onChange if the user provided one
     })
   }
 

@@ -149,16 +149,16 @@ Docs coming soon!
 
 ## `onChange` for `<Field>` and `<Form>`
 
-Sometimes you'll want real-time state updates as the user interacts with the form. By passing an `onChange` into `<Field>`, the API will call your callback function whenever there is a change to the field. The arguments provided will be `fieldState` and `formState`.
+Sometimes you'll want real-time state updates as the user interacts with the form. By passing an `onChange` into `<Field>`, the API will call your callback function whenever there is a change to the field. The arguments provided will be `fieldState`, `formState`, and the DOM event if applicable.
 
 ```jsx
-<Field name="email" input="input" onChange={(fieldState, formState) => { ... }} />
+<Field name="email" input="input" onChange={(fieldState, formState, event) => { ... }} />
 ```
 
-You can also pass an `onChange` callback into `<Form>`. The `<Form>`'s version on `onChange` will be provided the `name` of the field that was changed followed by the `formState`.
+You can also pass an `onChange` callback into `<Form>`. The `<Form>`'s version on `onChange` will be provided the `formState`, then the `name` of the field that was changed, then the DOM event (if applicable).
 
 ```jsx
-<Form onChange={(name, formState) => { ... }} />
+<Form onChange={(formState, name, event) => { ... }} />
 ```
 
 Note that the `<Field>` change will also trigger the a `<Form>` change and the <Field> change will be called first before the `<Form>`'s.
