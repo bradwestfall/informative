@@ -23,21 +23,42 @@ class Field extends React.Component {
   }
 
   getInitialValue(props) {
-    const { component: Component, type, checked } = props
-    if (typeof Component === 'string' && Component.toLowerCase() === 'input' && type) {
-      if (type.toLowerCase() === 'checkbox') {
-        return props.checked
-      } else if (type.toLowerCase() === 'radio') {
-        return checked ? props.value : undefined
-      }
+
+    // Radio
+    if (props.type && props.type.toLowerCase() === 'radio') {
+      return props.checked ? props.value : undefined
+
+    // Checkbox
+    } else if (props.type && props.type.toLowerCase() === 'checkbox') {
+      return props.checked ? props.value || true : ''
+
+    // Other
+    } else {
+      return props.value
     }
-    return props.value
+
   }
 
   // DOM Change
   onChange(e) {
-    const { type, target } = e
-    const value = target.type === 'checkbox' ? target.checked : target.value
+    const { target } = e
+    const isCheckbox = target.type === 'checkbox'
+
+    let value = ''
+    if (isCheckbox) {
+
+      value = target.checked ? target.value : ''
+    } else {
+      value = target.value
+    }
+
+
+    // const value =
+
+
+    // const value = target.type === 'checkbox' ? target.checked : target.value
+    //const value = target.value
+
     this.updateFieldState({ value, dirty: true })
   }
 
@@ -90,7 +111,7 @@ class Field extends React.Component {
         default: throw new Error('Invalid Component Prop: ', Component)
       }
 
-    // If <Field component={Custom} /> was passed a component prop with a component value
+    // If <Field component={CustomField} /> was passed a component prop with a custom component
     } else if (typeof Component === 'function') {
       return <Component {...rest} name={name} input={input} fieldState={fieldState} formState={formState} />
 

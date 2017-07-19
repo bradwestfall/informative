@@ -63,7 +63,8 @@ class Form extends React.Component {
 
       // If the field doesn't exist
       // OR, it does exist and the value is set and different
-      if (!newState.fields[name] || (newState.fields[name] && value !== undefined && newState.fields[name].value !== value)) {
+      //if (!newState.fields[name] || (newState.fields[name] && value !== undefined && newState.fields[name].value !== value)) {
+      if (!newState.fields[name] || (newState.fields[name] && value !== undefined)) {
         newState.fields[name] = initialFieldState(value)
         newState.values[name] = newState.fields[name].value
 
@@ -197,6 +198,7 @@ class Form extends React.Component {
       : <form {...props}>{this.props.children}</form>
 
     if (!form.type || form.type !== 'form') throw new Error('<Form render={fn} /> must return a single <form> DOM element.')
+    if (!form.props.onSubmit) throw new Error('Be sure to spread `formProps` on your returned <form {...formProps}>')
 
     return form
   }
