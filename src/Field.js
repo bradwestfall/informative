@@ -104,7 +104,7 @@ class Field extends React.Component {
 
     // Only the above three are allowed
     } else {
-      throw new Error('Field must have a component prop or pass a function as children to return an alternate field')
+      throw new Error('Field must have a `component` prop or `render` prop')
     }
   }
 }
