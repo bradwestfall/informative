@@ -27,7 +27,8 @@ class Field extends React.Component {
     const { children, component, value, ...restProps } = props
 
     return {
-      value: String(value) || '',
+      //value: value || '',
+      value: (typeof value === 'boolean') ? String(value)  : (value || ''),
       props: { ...restProps, value }
     }
   }
