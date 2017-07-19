@@ -1,6 +1,15 @@
 import Form from './Form'
 import Field from './Field'
 import connectField from './connectField'
-import { TextField, CheckboxField, RadioField } from './FieldTypes'
+import { TextField, CheckboxField, RadioField, SelectField, TextareaField } from './FieldTypes'
 
-export { Form, Field, TextField, CheckboxField, RadioField, connectField }
+export {
+  Form,
+  Field,
+  connectField,
+  TextField,
+  CheckboxField,
+  RadioField,
+  SelectField,
+  TextareaField
+}

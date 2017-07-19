@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { TextField, CheckboxField, RadioField } from './FieldTypes'
+import { TextField, CheckboxField, RadioField, SelectField, TextareaField } from './FieldTypes'
 
 class Field extends React.Component {
 
@@ -24,7 +24,8 @@ class Field extends React.Component {
 
   setupFieldState(props) {
     // Peel off values to leave rest
-    const { component, value, ...restProps } = props
+    const { children, component, value, ...restProps } = props
+
     return {
       value: value || '',
       props: { ...restProps, value }
@@ -88,15 +89,17 @@ class Field extends React.Component {
 
     // If <Field component="[string]" /> was passed a string component
     } else if (typeof Component === 'string') {
-      // switch(Component) {
-      //   case 'textarea': return <textarea {...rest} name={name} {...input} />
-      //   case 'select': return <select {...rest} name={name} {...input}>{children}</select>
-      //   default: throw new Error('Invalid Component Prop: ', Component)
-      // }
+      switch(Component) {
+        case 'textarea':
+          if (children) throw new Error('textarea fields use the `value` prop instead of children - https://facebook.github.io/react/docs/forms.html#the-textarea-tag')
+          return <TextareaField fieldState={fieldState} events={events} />
+        case 'select': return <SelectField fieldState={fieldState} events={events}>{children}</SelectField>
+        default: throw new Error('Invalid string value for `component` prop of <Field /> :', Component)
+      }
 
     // If <Field component={CustomField} /> was passed a component prop with a custom component
     } else if (typeof Component === 'function') {
-      return <Component originalValue={originalValue} fieldState={fieldState} formState={formState} events={events} />
+      return <Component originalValue={originalValue} fieldState={fieldState} formState={formState} events={events}>{children}</Component>
 
     // Only the above three are allowed
     } else {
