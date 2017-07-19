@@ -87,7 +87,10 @@ class Form extends React.Component {
           }
         }
 
+        // Set form's values
         newFormState.values[name] = newFormState.fields[name].value
+
+        // Call to validate replaces state with new state
         return this.validate(newFormState)
 
       }
