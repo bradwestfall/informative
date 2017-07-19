@@ -10,7 +10,7 @@ const FieldWrap = props => {
         <div className="field-wrap">
           <label htmlFor={`field-${name}`}>{label}</label>
           <div className="field">
-            <Component originalValue={value} name={name} fieldState={fieldState} formState={formState} events={events}>
+            <Component {...rest} originalValue={value} name={name} fieldState={fieldState} formState={formState} events={events}>
               {children}
             </Component>
           </div>
