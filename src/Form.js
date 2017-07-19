@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 const clone = obj => JSON.parse(JSON.stringify(obj))
 
 const initialFieldState = value => ({
-  value: value === undefined ? '' : value,
+  value: '',
   error: '',
   validField: true,
   visited: false,
@@ -57,22 +57,51 @@ class Form extends React.Component {
     this._isMounted = false
   }
 
-  registerField(name, value) {
+  registerField(name, fieldState) {
     this.setState(prevState => {
-      const newState = clone(prevState)
+      const newFormState = clone(prevState)
 
-      // If the field doesn't exist
-      // OR, it does exist and the value is set and different
-      //if (!newState.fields[name] || (newState.fields[name] && value !== undefined && newState.fields[name].value !== value)) {
-      if (!newState.fields[name] || (newState.fields[name] && value !== undefined)) {
-        newState.fields[name] = initialFieldState(value)
-        newState.values[name] = newState.fields[name].value
+      // If the previous state already has this name, then two fields are trying to
+      // register the same name which means this field is apart of a radio group
+      if (prevState.fields[name]) {
 
-        // Call to validate replaces state with new state
-        return this.validate(newState)
+        // If the fieldname has already been setup for "radio mode"
+        if (prevState.fields[name].radio) {
+          newFormState.fields[name].props[fieldState.value] = fieldState.props
+
+        // If the fieldname has not been setup for "radio mode"
+        } else {
+          newFormState.fields[name] = Object.assign(initialFieldState(), {
+            props: {
+              [prevState.fields[name].value]: clone(prevState.fields[name].props),
+              [fieldState.value]: fieldState.props
+            },
+            radio: true // radio mode
+          })
+        }
+
+        // Set the value based on which radio is checked
+        for (let key in newFormState.fields[name].props) {
+          if (newFormState.fields[name].props.hasOwnProperty(key) && newFormState.fields[name].props[key].checked) {
+            newFormState.fields[name].value = newFormState.fields[name].props[key].value
+          }
+        }
+
+        newFormState.values[name] = newFormState.fields[name].value
+        return this.validate(newFormState)
+
       }
 
-      return prevState
+      // If the code gets this far, we're not in radio mode
+
+      // Blend fieldState into initialFieldState
+      const newState = clone(prevState)
+      newState.fields[name] = Object.assign(initialFieldState(), fieldState)
+      newState.values[name] = newState.fields[name].value
+
+      // Call to validate replaces state with new state
+      return this.validate(newState)
+
     })
   }
 

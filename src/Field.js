@@ -7,36 +7,28 @@ class Field extends React.Component {
   constructor() {
     super()
     this.onChange = this.onChange.bind(this)
-    this.getInitialValue = this.getInitialValue.bind(this)
+    this.setupFieldState = this.setupFieldState.bind(this)
     this.updateFieldState = this.updateFieldState.bind(this)
   }
 
   componentWillMount() {
     const { name } = this.props
-    this.context.registerField(name, this.getInitialValue(this.props))
+    this.context.registerField(name, this.setupFieldState(this.props))
   }
 
   // Prop Change for `value`
   componentWillReceiveProps(nextProps) {
     if (nextProps.value === this.props.value && nextProps.checked === this.props.checked) return false
-    this.updateFieldState({ value: this.getInitialValue(nextProps) })
+    this.updateFieldState(this.setupFieldState(nextProps))
   }
 
-  getInitialValue(props) {
-
-    // Radio
-    if (props.type && props.type.toLowerCase() === 'radio') {
-      return props.checked ? props.value : undefined
-
-    // Checkbox
-    } else if (props.type && props.type.toLowerCase() === 'checkbox') {
-      return props.checked ? props.value || true : ''
-
-    // Other
-    } else {
-      return props.value
+  setupFieldState(props) {
+    // Peel off values to leave rest
+    const { component, value, ...restProps } = props
+    return {
+      value: value || '',
+      props: { ...restProps, value }
     }
-
   }
 
   // DOM Change
@@ -46,18 +38,10 @@ class Field extends React.Component {
 
     let value = ''
     if (isCheckbox) {
-
       value = target.checked ? target.value : ''
     } else {
       value = target.value
     }
-
-
-    // const value =
-
-
-    // const value = target.type === 'checkbox' ? target.checked : target.value
-    //const value = target.value
 
     this.updateFieldState({ value, dirty: true })
   }
@@ -71,7 +55,7 @@ class Field extends React.Component {
   }
 
   render() {
-    const { children, render, component: Component, name, ...rest } = this.props
+    const { children, render, component: Component, name, value: originalValue } = this.props
     const formState = this.context.getFormState() || {}
     const fieldState = formState.fields[name]
 
@@ -81,9 +65,8 @@ class Field extends React.Component {
     // Don't render if fieldState hasn't been setup
     if (!fieldState) return null
 
-    const input = {
-      name,
-      value: fieldState.value,
+    // Event callbacks for every field
+    const events = {
       onChange: this.onChange,
       onFocus: e => this.context.setFieldState(name, { visited: true, active: true }),
       onBlur: e => this.context.setFieldState(name, { active: false, touched: true })
@@ -91,29 +74,29 @@ class Field extends React.Component {
 
     // If <Field render={fn} /> is providing a field wrap by virtue of function
     if (typeof render === 'function') {
-      return render(input, fieldState, formState)
+      return render(originalValue, events, fieldState, formState)
 
     // If <Field component="input" /> was passed a string "input" component
     } else if (typeof Component === 'string' && Component.toLowerCase() === 'input') {
       const type = this.props.type
       switch(type) {
-        case 'checkbox': return <CheckboxField {...rest} name={name} input={input} />
-        case 'radio': return <RadioField {...rest} name={name} input={input} />
+        case 'checkbox': return <CheckboxField originalValue={originalValue} fieldState={fieldState} events={events} />
+        case 'radio': return <RadioField originalValue={originalValue} fieldState={fieldState} events={events} />
         case 'text':
-        default: return <TextField {...rest} type={type || 'text'} name={name} input={input} />
+        default: return <TextField fieldState={fieldState} events={events} />
       }
 
     // If <Field component="[string]" /> was passed a string component
     } else if (typeof Component === 'string') {
-      switch(Component) {
-        case 'textarea': return <textarea {...rest} name={name} {...input} />
-        case 'select': return <select {...rest} name={name} {...input}>{children}</select>
-        default: throw new Error('Invalid Component Prop: ', Component)
-      }
+      // switch(Component) {
+      //   case 'textarea': return <textarea {...rest} name={name} {...input} />
+      //   case 'select': return <select {...rest} name={name} {...input}>{children}</select>
+      //   default: throw new Error('Invalid Component Prop: ', Component)
+      // }
 
     // If <Field component={CustomField} /> was passed a component prop with a custom component
     } else if (typeof Component === 'function') {
-      return <Component {...rest} name={name} input={input} fieldState={fieldState} formState={formState} />
+      return <Component originalValue={originalValue} fieldState={fieldState} formState={formState} events={events} />
 
     // Only the above three are allowed
     } else {

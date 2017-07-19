@@ -1,21 +1,41 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-export const TextField = props => {
-  const { name, type, input, fieldState, formState, ...rest } = props
-  return <input {...rest} name={name} type={type} {...input} />
+const TextField = ({ fieldState, events }) => (
+  <input type={fieldState.props.type || 'text'} value={fieldState.value} {...events} />
+)
+
+TextField.propTypes = {
+  fieldState: PropTypes.object.isRequired,
+  events: PropTypes.object.isRequired
 }
 
-export const CheckboxField = props => {
-  const { name, input, fieldState, formState, ...rest } = props
-  const checked = input.value !== ''
-  const value = rest.value || 'true'
-  delete input.value
-  return <input {...rest} value={value} name={name} type="checkbox" checked={checked} {...input} />
+
+const CheckboxField = ({ originalValue, fieldState, events }) => {
+  const { value: stateValue } = fieldState
+  const checked = stateValue !== ''
+  return <input type="checkbox" value={originalValue} checked={checked} {...events} />
 }
 
-export const RadioField = props => {
-  const { name, input, fieldState, formState, ...rest } = props
-  const checked = input.value === rest.value
-  delete input.value
-  return <input {...rest} name={name} type="radio" checked={checked} {...input} />
+CheckboxField.propTypes = {
+  originalValue: PropTypes.any.isRequired,
+  fieldState: PropTypes.object.isRequired,
+  events: PropTypes.object.isRequired
 }
+
+
+const RadioField = ({ originalValue, fieldState, events }) => {
+  const { value: stateValue } = fieldState
+  const originalProps = fieldState.props[originalValue]
+  const checked = stateValue === originalValue
+  return <input type="radio" value={originalValue} checked={checked} {...events} />
+}
+
+RadioField.propTypes = {
+  originalValue: PropTypes.any.isRequired,
+  fieldState: PropTypes.object.isRequired,
+  events: PropTypes.object.isRequired
+}
+
+
+export { TextField, CheckboxField, RadioField }
