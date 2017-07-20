@@ -14,12 +14,12 @@ const cleanProps = props => {
   <input type="text">
 *****************************************/
 
-const TextField = ({ name, fieldState, events, ...rest }) => {
+const InputField = ({ name, fieldState, events, ...rest }) => {
   const props = cleanProps(rest)
   return <input {...props} name={name} type={fieldState.props.type || 'text'} value={fieldState.value} {...events} />
 }
 
-TextField.propTypes = {
+InputField.propTypes = {
   name: PropTypes.string.isRequired,
   fieldState: PropTypes.object.isRequired,
   events: PropTypes.object.isRequired
@@ -91,4 +91,4 @@ TextareaField.propTypes = {
   events: PropTypes.object.isRequired
 }
 
-export { TextField, CheckboxField, RadioField, SelectField, TextareaField }
+export { InputField, CheckboxField, RadioField, SelectField, TextareaField }

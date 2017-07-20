@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { TextField, CheckboxField, RadioField, SelectField, TextareaField } from './FieldTypes'
+import { InputField, CheckboxField, RadioField, SelectField, TextareaField } from './FieldTypes'
 
 class Field extends React.Component {
 
@@ -85,7 +85,7 @@ class Field extends React.Component {
         case 'checkbox': return <CheckboxField {...rest} name={name} originalValue={originalValue} fieldState={fieldState} events={events} />
         case 'radio': return <RadioField {...rest} name={name} originalValue={originalValue} fieldState={fieldState} events={events} />
         case 'text':
-        default: return <TextField {...rest} name={name} fieldState={fieldState} events={events} />
+        default: return <InputField {...rest} name={name} fieldState={fieldState} events={events} />
       }
 
     // If <Field component="[string]" /> was passed a string component

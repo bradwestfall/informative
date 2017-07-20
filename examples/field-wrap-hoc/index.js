@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Form, connectField } from 'src'
 
-const TextField = props => {
+const InputField = props => {
   const { name, type, input } = props
   return <input type={type || 'text'} id={`field-` + name} name={name} {...input} />
 }
@@ -18,7 +18,7 @@ const FieldWrap = props => {
     <div className="field-wrap">
       <label htmlFor={`field-` + name}>{label}</label>
       <div className="input">
-        <TextField input={input} name={name} type={type} />
+        <InputField input={input} name={name} type={type} />
       </div>
       <div className="error">
         {fieldState.error}

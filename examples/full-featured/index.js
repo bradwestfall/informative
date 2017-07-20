@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Form, Field, TextField } from 'src'
+import { Form, Field, InputField } from 'src'
 
 const FieldWrap = props => {
-  const { label, component: Component, children, value, name, ...rest } = props
+  const { label, component: Component, children, name, value, ...rest } = props
 
   return (
-    <Field name={name} {...rest} render={(events, fieldState, formState) => (
+    <Field {...rest} name={name} value={value} render={(events, fieldState, formState) => (
         <div className="field-wrap">
           <label htmlFor={`field-${name}`}>{label}</label>
           <div className="field">
@@ -23,10 +23,10 @@ const FieldWrap = props => {
 }
 
 // High-level Field Abstractions
-const FieldFirstName = props => <FieldWrap label="First Name" name="firstName" component={TextField} {...props} />
-const FieldLastName = props => <FieldWrap label="Last Name" name="lastName" component={TextField} {...props} />
-const FieldEmail = props => <FieldWrap label="Email" name="email" component={TextField} type="email" {...props} />
-const FieldPassword = props => <FieldWrap label="Password" name="password" component={TextField} type="password" {...props} />
+const FieldFirstName = props => <FieldWrap label="First Name" name="firstName" component={InputField} {...props} />
+const FieldLastName = props => <FieldWrap label="Last Name" name="lastName" component={InputField} {...props} />
+const FieldEmail = props => <FieldWrap label="Email" name="email" component={InputField} type="email" {...props} />
+const FieldPassword = props => <FieldWrap label="Password" name="password" component={InputField} type="password" {...props} />
 
 class UserForm extends React.Component {
 

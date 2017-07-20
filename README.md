@@ -62,7 +62,7 @@ In the previous example `<Field name="fullName" component="input" />` is used to
 
 When using `<Field>` this way with `component="input"`, a `type` property can also be used to designate other input types similar to ordinary HTML. If no `type` is specified, the default is `text`.
 
-Under the hood, `<Field>` uses `<TextField>` when passing `component="input"` into `<Field>` (as long as the type isn't a radio or checkbox). See more on `<TextField>` below in [Built-in Fields](#built-in-fields).
+Under the hood, `<Field>` uses `<InputField>` when passing `component="input"` into `<Field>` (as long as the type isn't a radio or checkbox). See more on `<InputField>` below in [Built-in Fields](#built-in-fields).
 
 
 #### Checkbox Inputs
@@ -121,7 +121,7 @@ Under the hood, `<Field>` uses `<TextareaField>` when passing `component="textar
 
 There are several built-in fields which the API uses internally but can also be used by you. The fields are
 
-- TextField (for <input>'s that aren't radio or checkboxes)
+- InputField (for <input>'s that aren't radio or checkboxes)
 - CheckboxField
 - RadioField
 - SelectField
@@ -131,13 +131,13 @@ Whereas `<Field>` can be used with a string `component` prop, it can also be pas
 
 ```jsx
 <Field name="email" component="input" value="example@example.com" />
-<Field name="email" component={TextField} value="example@example.com" />
+<Field name="email" component={InputField} value="example@example.com" />
 ```
 
 All of the built in fields can be imported from the `informative` module like this:
 
 ```js
-import { TextField, CheckboxField, RadioField, SelectField, TextareaField } from 'informative'
+import { InputField, CheckboxField, RadioField, SelectField, TextareaField } from 'informative'
 ```
 
 
@@ -228,7 +228,7 @@ As seen in the previous example, by passing a string value for the `component` p
 As an alternative, we can pass a custom component into the `component` prop:
 
 ```jsx
-const TextField = props => {
+const InputField = props => {
   const { name, type, events, fieldState, formState } = props
 
   // Access to field and form state
@@ -240,12 +240,12 @@ const TextField = props => {
 
 const Example = props => (
   <Form>
-    <Field name="email" component={TextField} type="email" />
+    <Field name="email" component={InputField} type="email" />
   </Form>
 )
 ```
 
-By providing the component our `TextField` instead of a string, we will gain access to props like `fieldState` and `formState` from within `TextField`. `TextField` is now expected to return a valid HTML form element of your choice (it doesn't have to be `<input />`). Just be sure to spread the `events` prop into your element to ensure the correct event callbacks are applied.
+By providing the component our `InputField` instead of a string, we will gain access to props like `fieldState` and `formState` from within `InputField`. `InputField` is now expected to return a valid HTML form element of your choice (it doesn't have to be `<input />`). Just be sure to spread the `events` prop into your element to ensure the correct event callbacks are applied.
 
 > Note: You may need to configure babel to understand JSX spread.
 
@@ -481,13 +481,13 @@ To achieve this without repeating the same HTML structure by hard-coding it for 
 
 ```jsx
 import React from 'react'
-import { Form, Field, TextField } from 'informative'
+import { Form, Field, InputField } from 'informative'
 
 const FieldWrap = props => {
-  const { label, component: Component, children, value, name, ...rest } = props
+  const { label, component: Component, children, name, value, ...rest } = props
 
   return (
-    <Field name={name} {...rest} render={(events, fieldState, formState) => {
+    <Field {...rest} name={name} value={value} render={(events, fieldState, formState) => {
       return (
         <div className="field-wrap">
           <label htmlFor={`field-${name}`}>{label}</label>
@@ -507,8 +507,8 @@ const FieldWrap = props => {
 
 const LoginForm = props => (
   <Form>
-    <FieldWrap label="Email" name="email" component={TextField} />
-    <FieldWrap label="Password" name="password" component={TextField} type="password" />
+    <FieldWrap label="Email" name="email" component={InputField} />
+    <FieldWrap label="Password" name="password" component={InputField} type="password" />
     <button type="submit">Submit</button>
   </Form>
 )
@@ -516,7 +516,7 @@ const LoginForm = props => (
 
 Not only do we get to write the wrapper code and use it everywhere, it has other benefits like how field errors can be emitted inline with the field in the DOM.
 
-You can build your own version of `<FieldWrap>` any way you like. This one is just an example and doesn't come with the API. Notice that this one does make use of the built-in `TextField` component. This example `<FieldWrap>` would allow us to use the build-in `TextField`, `CheckboxField`, `RadioField`, `SelectField`, and `TextareaField` -- all of which require specific props that you can see we're passing into `<Component originalValue={value} name={name} fieldState={fieldState} formState={formState} events={events} />`. Yours though could be built any way you like, just be sure to pass the `events` prop into the actual form field to wire it into the API.
+You can build your own version of `<FieldWrap>` any way you like. This one is just an example and doesn't come with the API. Notice that this one does make use of the built-in `InputField` component. This example `<FieldWrap>` would allow us to use the build-in `InputField`, `CheckboxField`, `RadioField`, `SelectField`, and `TextareaField` -- all of which require specific props that you can see we're passing into `<Component originalValue={value} name={name} fieldState={fieldState} formState={formState} events={events} />`. Yours though could be built any way you like, just be sure to pass the `events` prop into the actual form field to wire it into the API.
 
 For more docs on the built-in fields, see [Built-in Fields](#built-in-fields) above.
 
@@ -525,15 +525,15 @@ For more docs on the built-in fields, see [Built-in Fields](#built-in-fields) ab
 
 [See Full Code Example](examples/full-featured/index.js)
 
-Further abstraction can be done by making specific types of fields for quick use. For example, imaging having a `<FieldFirstName />` component which provides the same result as `<FieldWrap label="First Name" name="firstName" component={TextField} />`.
+Further abstraction can be done by making specific types of fields for quick use. For example, imaging having a `<FieldFirstName />` component which provides the same result as `<FieldWrap label="First Name" name="firstName" component={InputField} />`.
 
 With our new `FieldWrap` component, we can now make easy field abstractions for common fields:
 
 ```jsx
-const FieldFirstName = props => <FieldWrap label="First Name" name="firstName" component={TextField} {...props} />
-const FieldLastName = props => <FieldWrap label="Last Name" name="lastName" component={TextField} {...props} />
-const FieldEmail = props => <FieldWrap label="Email" name="email" component={TextField} type="email" {...props} />
-const FieldPassword = props => <FieldWrap label="Password" name="password" component={TextField} type="password" {...props} />
+const FieldFirstName = props => <FieldWrap label="First Name" name="firstName" component={InputField} {...props} />
+const FieldLastName = props => <FieldWrap label="Last Name" name="lastName" component={InputField} {...props} />
+const FieldEmail = props => <FieldWrap label="Email" name="email" component={InputField} type="email" {...props} />
+const FieldPassword = props => <FieldWrap label="Password" name="password" component={InputField} type="password" {...props} />
 ```
 
 To be used like this:
