@@ -13,9 +13,9 @@ npm install --save informative
 ## Contents
 
 - [`<Form>` and `<Field>`](#form-and-field)
-  - [`<Field component="input" />`](#)
-  - [`<Field component="select" />`](#)
-  - [`<Field component="textarea" />`](#)
+  - [`<Field component="input" />`](#field-componentinput-)
+  - [`<Field component="select" />`](#field-componentselect-)
+  - [`<Field component="textarea" />`](#field-component-textarea-)
   - [Built-in Fields](#built-in-fields)
   - [Custom Fields](#custom-fields)
   - [`onChange` for `<Field>` and `<Form>`](#onchange-for-field-and-form)
