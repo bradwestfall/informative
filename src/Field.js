@@ -13,7 +13,7 @@ class Field extends React.Component {
 
   componentWillMount() {
     const { name } = this.props
-    this.context.registerField(name, this.setupFieldState(this.props), this.props.format)
+    this.context.registerField(name, this.setupFieldState(this.props))
   }
 
   // Prop Change for `value`
@@ -24,11 +24,15 @@ class Field extends React.Component {
 
   setupFieldState(props) {
     // Peel off values to leave `restProps`
-    const { children, component, value, ...restProps } = props
+    const { children, component, value, trim, format, ...restProps } = props
 
     return {
       // Normalize value before sending it to fieldState
       value: (typeof value === 'boolean') ? String(value)  : (value || ''),
+      // A formatter function for the value
+      format,
+      // Does the field's value get automatically trimmed
+      trim,
       // Give original props to fieldState
       props: { ...restProps, value }
     }
@@ -58,7 +62,8 @@ class Field extends React.Component {
   }
 
   render() {
-    const { render, component: Component, name, trim, value: originalValue, children, ...rest } = this.props
+    // Some of these variables aren't used. We just need to peel them off so we can get rest
+    const { render, component: Component, name, trim, format, value: originalValue, children, ...rest } = this.props
     const formState = this.context.getFormState() || {}
     const fieldState = formState.fields[name]
 
@@ -118,7 +123,6 @@ Field.contextTypes = {
 }
 
 Field.defaultProps = {
-  trim: true,
   format: value => value
 }
 

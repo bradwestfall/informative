@@ -1,8 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { cloneDeep } from 'lodash/lang'
 
 // http://stackoverflow.com/a/5344074
-const clone = obj => JSON.parse(JSON.stringify(obj))
+// const clone = obj => JSON.parse(JSON.stringify(obj))
+const clone = cloneDeep
 
 const initialFieldState = value => ({
   value: '',
@@ -58,13 +60,9 @@ class Form extends React.Component {
     this._isMounted = false
   }
 
-  registerField(name, fieldState, format) {
+  registerField(name, fieldState) {
     this.setState(prevState => {
       const newFormState = clone(prevState)
-
-      // Keep the "formater" function for this field, but away from the
-      // field state.
-      newFormState.fieldFormats[name] = format
 
       // If the previous state already has this name, then two fields are trying to
       // register the same name which means this field is apart of a radio group
@@ -95,25 +93,22 @@ class Form extends React.Component {
         // Set form's values
         newFormState.values[name] = newFormState.fields[name].value
 
-        // Call to validate replaces state with new state
-        return this.validate(newFormState)
+      // Not in radio group mode
+      } else {
+
+        // Checkbox
+        if (fieldState.props.checked === false) {
+          fieldState.value = ''
+        }
+
+        // Blend fieldState into initialFieldState
+        newFormState.fields[name] = Object.assign(initialFieldState(), fieldState)
+        newFormState.values[name] = newFormState.fields[name].value
 
       }
-
-      // If the code gets this far, we're not in radio mode
-
-      // Checkbox
-      if (fieldState.props.checked === false) {
-        fieldState.value = ''
-      }
-
-      // Blend fieldState into initialFieldState
-      const newState = clone(prevState)
-      newState.fields[name] = Object.assign(initialFieldState(), fieldState)
-      newState.values[name] = newState.fields[name].value
 
       // Call to validate replaces state with new state
-      return this.validate(newState)
+      return this.validate(newFormState)
 
     })
   }
@@ -121,9 +116,9 @@ class Form extends React.Component {
   // When fields get changed in any way: value, blur, focus, etc
   setFieldState(name, state, cb) {
     const formValueFormatter = this.props.format
-    const fieldValueFormatter = this.state.fieldFormats[name]
-
-    console.log('sss', this.state, name)
+    const formTrim = this.props.trim
+    const fieldValueFormatter = this.state.fields[name].format
+    const fieldTrim = this.state.fields[name].trim
 
     this.setState(prevState => {
       let newState = clone(prevState)
@@ -137,8 +132,17 @@ class Form extends React.Component {
       // If state has value property then the value changed
       if (state.hasOwnProperty('value')) {
 
+        // Apply field format and form format functions
+        var value = formValueFormatter(fieldValueFormatter(state.value), name)
+
+        // Apply Trim Logic. The field version takes precedence over the form version
+        if (fieldTrim === true || (fieldTrim !== false) && formTrim === true) {
+          value = value.trim()
+        }
+
+        newState.values[name] = value
+
         // Set some formState values which are not passed into setFieldState
-        newState.values[name] = formValueFormatter(state.value, name)
         newState.dirty = true
 
         // Call to validate replaces state with new state
@@ -153,9 +157,7 @@ class Form extends React.Component {
   }
 
   getFormState() {
-    const formState = clone(this.state)
-    delete formState.fieldFormats
-    return formState
+    return clone(this.state)
   }
 
   onChange(name, e) {
