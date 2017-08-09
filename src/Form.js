@@ -29,6 +29,7 @@ class Form extends React.Component {
       dirty: false,
       errors: {},
       fields: {},
+      fieldFormats: {},
       values: {},
     }
     this.registerField = this.registerField.bind(this)
@@ -57,9 +58,13 @@ class Form extends React.Component {
     this._isMounted = false
   }
 
-  registerField(name, fieldState) {
+  registerField(name, fieldState, format) {
     this.setState(prevState => {
       const newFormState = clone(prevState)
+
+      // Keep the "formater" function for this field, but away from the
+      // field state.
+      newFormState.fieldFormats[name] = format
 
       // If the previous state already has this name, then two fields are trying to
       // register the same name which means this field is apart of a radio group
@@ -113,7 +118,13 @@ class Form extends React.Component {
     })
   }
 
+  // When fields get changed in any way: value, blur, focus, etc
   setFieldState(name, state, cb) {
+    const formValueFormatter = this.props.format
+    const fieldValueFormatter = this.state.fieldFormats[name]
+
+    console.log('sss', this.state, name)
+
     this.setState(prevState => {
       let newState = clone(prevState)
 
@@ -127,7 +138,7 @@ class Form extends React.Component {
       if (state.hasOwnProperty('value')) {
 
         // Set some formState values which are not passed into setFieldState
-        newState.values[name] = state.value
+        newState.values[name] = formValueFormatter(state.value, name)
         newState.dirty = true
 
         // Call to validate replaces state with new state
@@ -142,7 +153,9 @@ class Form extends React.Component {
   }
 
   getFormState() {
-    return clone(this.state)
+    const formState = clone(this.state)
+    delete formState.fieldFormats
+    return formState
   }
 
   onChange(name, e) {
@@ -153,7 +166,7 @@ class Form extends React.Component {
     if (!this.props.validate) return state
 
     const newState = clone(state)
-    newState.errors = clone(this.props.validate(state.values) || {}, this.getFormState())
+    newState.errors = clone(this.props.validate(state.values, this.getFormState()) || {})
     newState.validForm = !Object.keys(newState.errors).length
 
     // Iterate all existing fields and change their `error` message and `validField`
@@ -246,10 +259,17 @@ Form.childContextTypes = {
   onChange: PropTypes.func
 }
 
+Form.defaultProps = {
+  trim: true,
+  format: value => value
+}
+
 Form.propTypes = {
   onSubmit: PropTypes.func,
   validate: PropTypes.func,
-  render: PropTypes.func
+  render: PropTypes.func,
+  format: PropTypes.func,
+  trim: PropTypes.bool
 }
 
 export default Form

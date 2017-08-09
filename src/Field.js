@@ -13,7 +13,7 @@ class Field extends React.Component {
 
   componentWillMount() {
     const { name } = this.props
-    this.context.registerField(name, this.setupFieldState(this.props))
+    this.context.registerField(name, this.setupFieldState(this.props), this.props.format)
   }
 
   // Prop Change for `value`
@@ -23,12 +23,13 @@ class Field extends React.Component {
   }
 
   setupFieldState(props) {
-    // Peel off values to leave rest
+    // Peel off values to leave `restProps`
     const { children, component, value, ...restProps } = props
 
     return {
-      //value: value || '',
+      // Normalize value before sending it to fieldState
       value: (typeof value === 'boolean') ? String(value)  : (value || ''),
+      // Give original props to fieldState
       props: { ...restProps, value }
     }
   }
@@ -57,7 +58,7 @@ class Field extends React.Component {
   }
 
   render() {
-    const { render, component: Component, name, value: originalValue, children, ...rest } = this.props
+    const { render, component: Component, name, trim, value: originalValue, children, ...rest } = this.props
     const formState = this.context.getFormState() || {}
     const fieldState = formState.fields[name]
 
@@ -116,9 +117,16 @@ Field.contextTypes = {
   onChange: PropTypes.func
 }
 
+Field.defaultProps = {
+  trim: true,
+  format: value => value
+}
+
 Field.propTypes = {
   name: PropTypes.string.isRequired,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  format: PropTypes.func,
+  trim: PropTypes.bool
 }
 
 export default Field
