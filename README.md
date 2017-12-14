@@ -1,7 +1,6 @@
 # informative
 
-Informative forms keep track of form and field state for you and provide a "redux-form" style input API, or render props API via `<Field render/>`. Also creating [`<Field Wraps />`](#field-wraps) "templates" are a first class feature.
-
+Informative is a `<Form>` and `<Field>` Compound Component Stratagy that keep track of form and field state for you and can provide it to you in a several of ways. Create basic fields with a "redux-form" style `<Field />` API, or use render props to create a [re-usable "Field Wrap"](#field-wraps) with `<Field render>`.
 
 ## Install
 
@@ -33,8 +32,6 @@ npm install --save informative
   - [`connectField` HoC](#connectfield-hoc)
 - [`formState`](#formstate)
 - [`fieldState`](#fieldstate)
-
-
 
 
 # `<Form>` and `<Field>`
