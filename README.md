@@ -1,6 +1,6 @@
 # informative
 
-Forms with internal state-management
+Informative forms keep track of form and field state for you and provide a "redux-form" style input API, or render props API via `<Field render/>`. Also creating [`<Field Wraps />`](#field-wraps) "templates" are a first class feature.
 
 
 ## Install
