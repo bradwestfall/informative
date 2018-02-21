@@ -136,7 +136,7 @@ class Form extends React.Component {
         var value = formValueFormatter(fieldValueFormatter(state.value), name)
 
         // Apply Trim Logic. The field version takes precedence over the form version
-        if (fieldTrim === true || (fieldTrim !== false) && formTrim === true) {
+        if (fieldTrim === true || (fieldTrim !== false) && formTrim === true && value.trim) {
           value = value.trim()
         }
 
