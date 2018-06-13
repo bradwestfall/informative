@@ -118,7 +118,7 @@ Under the hood, `<Field>` uses `<TextareaField>` when passing `component="textar
 
 There are several built-in fields which the API uses internally but can also be used by you. The fields are
 
-- InputField (for <input>'s that aren't radio or checkboxes)
+- InputField (for `<input>`'s that aren't radio or checkboxes)
 - CheckboxField
 - RadioField
 - SelectField
