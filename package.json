@@ -1,6 +1,6 @@
 {
   "name": "informative",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "React forms with internal state-management",
   "main": "dist/index.js",
   "repository": {
