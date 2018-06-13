@@ -52,7 +52,7 @@ class Form extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this._isMounted = true
   }
 
@@ -74,13 +74,24 @@ class Form extends React.Component {
 
         // If the fieldname has not been setup for "radio mode"
         } else {
-          newFormState.fields[name] = Object.assign(initialFieldState(), {
+          // This happens when we've encountered a second field with an already-used
+          // name and so now we need to retroactively go back and set the previous
+          // field to be a radio field (by marking it with `radio: true`) and
+          // also to store each respective radio field's value in the props so
+          // know what to set the overall value to when clicked
+
+          newFormState.fields[name] = Object.assign(newFormState.fields[name], {
             props: {
-              [prevState.fields[name].value]: clone(prevState.fields[name].props),
+              // This "value" represents the first field that was registered
+              [prevState.fields[name].props.value]: clone(prevState.fields[name].props),
+              // This "value" is the current (the second) radio field. Note that a third
+              // radio field will not hit this `else` clause at all, but will it the
+              // respective `if` clause
               [fieldState.value]: fieldState.props
             },
             radio: true // radio mode
           })
+
         }
 
         // Set the value based on which radio is checked
@@ -93,7 +104,7 @@ class Form extends React.Component {
         // Set form's values
         newFormState.values[name] = newFormState.fields[name].value
 
-      // Not in radio group mode
+      // Not in radio group mode (or the first radio which doesn't have a duplicate name yet)
       } else {
 
         // Checkbox
@@ -103,13 +114,14 @@ class Form extends React.Component {
 
         // Blend fieldState into initialFieldState
         newFormState.fields[name] = Object.assign(initialFieldState(), fieldState)
+
+        // Assign the value to the form's state list of values
         newFormState.values[name] = newFormState.fields[name].value
 
       }
 
       // Call to validate replaces state with new state
       return this.validate(newFormState)
-
     })
   }
 

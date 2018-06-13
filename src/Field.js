@@ -11,7 +11,7 @@ class Field extends React.Component {
     this.updateFieldState = this.updateFieldState.bind(this)
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { name } = this.props
     this.context.registerField(name, this.setupFieldState(this.props))
   }
