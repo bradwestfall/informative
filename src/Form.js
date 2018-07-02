@@ -207,7 +207,7 @@ class Form extends React.Component {
 
       // If a custom submit handler was provided
       if (this.props.onSubmit) {
-        const submitResponse = this.props.onSubmit(values, this.getFormState())
+        const submitResponse = this.props.onSubmit(Object.assign({}, values), this.getFormState())
 
         // If the response is a promise
         if (typeof submitResponse === 'object' && typeof submitResponse.then === 'function') {
