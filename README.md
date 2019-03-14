@@ -1,3 +1,9 @@
+# ** NOT MAINTAINED **
+
+When I wrote this library, redux-form was "king of the land" as far as React forms go. I wanted a similar API that provided meta state about forms and fields but without the redux part. This project did a great job of that. However, another project called [Formik](https://github.com/jaredpalmer/formik) emerged since I wrote `informative` and it does all the things I was trying to do and a few more. It's well maintained and I've recently updated my largest project to use it instead.
+
+<hr />
+
 # informative
 
 Informative is a `<Form>` and `<Field>` Compound Component Stratagy that keep track of form and field state for you and can provide it to you in a several of ways. Create basic fields with a "redux-form" style `<Field />` API, or use render props to create a [re-usable "Field Wrap"](#field-wraps) with `<Field render>`.
